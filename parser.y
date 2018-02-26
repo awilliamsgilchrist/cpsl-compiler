@@ -180,7 +180,7 @@ OptVar : VARSY {}
 Body : OptConstDecls OptTypeDecls OptVarDecls Block {}
      ;
 
-Block : BEGINSY StatementList ENDSY {}
+Block : BEGINSY StatementList ENDSY { outBlock(); }
       ;
 
 StatementList : StatementList SCOLONSY Statement {}
@@ -303,11 +303,11 @@ ReadArgs : ReadArgs COMMASY LValue {}
          | LValue                  {}
          ;
 
-WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {}
+WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement(string_list[$3.raw_val]);}
                ;
 
 WriteArgs : WriteArgs COMMASY Expression {}
-          | Expression                   {}
+          | Expression                   {$$ = $1;}
           ;
 
 ProcedureCall : IDENTSY LPARENSY OptArguments RPARENSY {}
@@ -342,7 +342,7 @@ Expression : CHARCONSTSY                         {}
            | NOTSY Expression                    {}
            | ORDSY LPARENSY Expression RPARENSY  {}
            | PREDSY LPARENSY Expression RPARENSY {}
-           | STRINGSY                            {}
+           | STRINGSY                            {$$ = Expression(type_list[3], string_list.size()); string_list.push($1); }
            | SUCCSY LPARENSY Expression RPARENSY {}
            ;
 
