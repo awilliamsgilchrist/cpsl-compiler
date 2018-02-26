@@ -1,8 +1,10 @@
 %{
 #include <iostream>
 #include <fstream>
+#include <vector>
 
-#include"main.h"
+#include"../main.h"
+#include"../Express.h"
 
 extern int yylex();
 void yyerror(const char*);
@@ -310,8 +312,8 @@ ReadArgs : ReadArgs COMMASY LValue {}
 WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement($3);}
                ;
 
-WriteArgs : WriteArgs COMMASY Expression {$1->push($3); $$ = $1; }
-          | Expression                   {$$ = new vector<Express*>($1);}
+WriteArgs : WriteArgs COMMASY Expression {$1->push_back($3); $$ = $1; }
+          | Expression                   {$$ = new std::vector<Express*>(1, $1);}
           ;
 
 ProcedureCall : IDENTSY LPARENSY OptArguments RPARENSY {}
@@ -346,7 +348,7 @@ Expression : CHARCONSTSY                         {}
            | NOTSY Expression                    {}
            | ORDSY LPARENSY Expression RPARENSY  {}
            | PREDSY LPARENSY Expression RPARENSY {}
-           | STRINGSY                            {$$ = new Express(type_string, string_list.size()); string_list.push($1); }
+           | STRINGSY                            {$$ = new Express(type_string, string_list.size()); string_list.push_back($1); }
            | SUCCSY LPARENSY Expression RPARENSY {}
            ;
 

@@ -1,3 +1,5 @@
+#ifndef _EXPRESS_H
+#define _EXPRESS_H
 #include<string>
 #include<iostream>
 
@@ -14,3 +16,5 @@ class Express {
 			{}
 
 };
+
+#endif

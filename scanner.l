@@ -1,7 +1,9 @@
 %{
 #include <cstring>
 #include <cstdlib>
+#include<vector>
 
+#include "../Express.h"
 #include "parser.hpp"
 %}
 

@@ -17,7 +17,7 @@ void SymbolTable::addType(std::string key, int* type_ptr)
 	typeMap.top().emplace(key, type_ptr);
 }
 
-void SymbolTable::addExpr(std::string key, Expression expr)
+void SymbolTable::addExpr(std::string key, Express expr)
 {
 	exprMap.top().emplace(key, expr);
 }

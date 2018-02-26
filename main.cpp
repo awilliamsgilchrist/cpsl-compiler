@@ -35,20 +35,20 @@ void outWriteStatement(std::vector<Express*>* vect)
 {
 	for(unsigned int i = 0; i < vect->size(); i++)
 	{
-		if(*vect[i]->type_ptr == type_string)
+		if(vect->at(i)->type_ptr == type_string)
 		{
 			out << "li $v0, 4" << std::endl;
-			out << "la $a0, STR" << *vect[i]->raw_value << std::endl;
+			out << "la $a0, STR" << vect->at(i)->raw_val << std::endl;
 		}
-		else if(*vect[i]->type_ptr == type_char)
+		else if(vect->at(i)->type_ptr == type_char)
 		{
 			out << "li $v0, 11" << std::endl;
-			out << "li $a0, " << *vect[i]->raw_value << std::endl;
+			out << "li $a0, " << vect->at(i)->raw_val << std::endl;
 		}
 		else
 		{
 			out << "li $v0, 1" << std::endl;
-			out << "li $a0, " << *vect[i]->raw_value << std::endl;
+			out << "li $a0, " << vect->at(i)->raw_val << std::endl;
 		}
 		
 		out << "syscall" << std::endl;

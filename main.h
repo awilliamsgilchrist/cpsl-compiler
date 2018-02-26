@@ -10,8 +10,8 @@ extern int* type_bool;
 extern int* type_char;
 extern int* type_string;
 
-SymbolTable symbol_table;
-std::vector<std::string> string_list;
+extern SymbolTable symbol_table;
+extern std::vector<std::string> string_list;
 extern std::ofstream out;
 
 extern std::string getStringListIdentifier(std::string str);
