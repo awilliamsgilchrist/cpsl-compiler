@@ -12,9 +12,9 @@ class SymbolTable {
 		int exprCount;
 		
 		SymbolTable():
-			this.offset = 0,
-			this.typeCount = 0,
-			this.exprCount = 0
+			offset(0),
+			typeCount(0),
+			exprCount(0)
 		{
 			typeMap.emplace();
 			exprMap.emplace();

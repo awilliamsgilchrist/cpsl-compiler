@@ -7,9 +7,9 @@ class Expression {
 		std::string regist;
 
 		Expression(int* type_ptr, int raw_val, std::string regist = ""):
-			this.type_ptr = type_ptr,
-			this.raw_val = raw_val,
-			this.regist = regist
+			type_ptr(type_ptr),
+			raw_val(raw_val),
+			regist(regist)
 			{}
 
 };
