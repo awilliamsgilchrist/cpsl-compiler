@@ -1,12 +1,12 @@
 #include<map>
 #include<stack>
 
-#include "Expression.h"
+#include "Express.h"
 
 class SymbolTable {
 	public:
 		std::stack<std::map<std::string, int*>> typeMap;
-		std::stack<std::map<std::string, Expression>> exprMap;
+		std::stack<std::map<std::string, Express>> exprMap;
 		int offset;
 		int typeCount;
 		int exprCount;
@@ -23,7 +23,7 @@ class SymbolTable {
 		void stepInContext();
 		void stepOutContext();
 		void addType(std::string key, int* type_ptr);
-		void addExpr(std::string key, Expression expr);
+		void addExpr(std::string key, Express expr);
 		void removeType(std::string key);
 		void removeExpr(std::string key);
 };

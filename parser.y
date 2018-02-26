@@ -342,7 +342,7 @@ Expression : CHARCONSTSY                         {}
            | NOTSY Expression                    {}
            | ORDSY LPARENSY Expression RPARENSY  {}
            | PREDSY LPARENSY Expression RPARENSY {}
-           | STRINGSY                            {$$ = Expression(type_list[3], string_list.size()); string_list.push($1); }
+           | STRINGSY                            {$$ = Express(type_list[3], string_list.size()); string_list.push($1); }
            | SUCCSY LPARENSY Expression RPARENSY {}
            ;
 
