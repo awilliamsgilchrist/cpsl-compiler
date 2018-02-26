@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+#include"main.h"
+
 extern int yylex();
 void yyerror(const char*);
 %}
@@ -11,6 +13,8 @@ void yyerror(const char*);
   char * str_val;
   int int_val;
   char char_val;
+  Express* expr_val;
+  std::vector<Express*>* vect_expr;
 }
 
 %error-verbose
@@ -86,7 +90,7 @@ void yyerror(const char*);
 %type <int_val> ElseClause 
 %type <int_val> ElseIfHead 
 %type <int_val> ElseIfList 
-%type <int_val> Expression 
+%type <expr_val> Expression 
 %type <int_val> FSignature 
 %type <int_val> FieldDecl 
 %type <int_val> FieldDecls
@@ -119,7 +123,7 @@ void yyerror(const char*);
 %type <int_val> Type 
 %type <int_val> WhileHead 
 %type <int_val> WhileStatement 
-%type <int_val> WriteArgs 
+%type <vect_expr> WriteArgs 
 %type <int_val> WriteStatement  
 %type <str_val> IDENTSY 
 %type <str_val> STRINGSY 
@@ -303,11 +307,11 @@ ReadArgs : ReadArgs COMMASY LValue {}
          | LValue                  {}
          ;
 
-WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement(string_list[$3.raw_val]);}
+WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement($3);}
                ;
 
-WriteArgs : WriteArgs COMMASY Expression {}
-          | Expression                   {$$ = $1;}
+WriteArgs : WriteArgs COMMASY Expression {$1->push($3); $$ = $1; }
+          | Expression                   {$$ = new vector<Express*>($1);}
           ;
 
 ProcedureCall : IDENTSY LPARENSY OptArguments RPARENSY {}
@@ -342,7 +346,7 @@ Expression : CHARCONSTSY                         {}
            | NOTSY Expression                    {}
            | ORDSY LPARENSY Expression RPARENSY  {}
            | PREDSY LPARENSY Expression RPARENSY {}
-           | STRINGSY                            {$$ = Express(type_list[3], string_list.size()); string_list.push($1); }
+           | STRINGSY                            {$$ = new Express(type_string, string_list.size()); string_list.push($1); }
            | SUCCSY LPARENSY Expression RPARENSY {}
            ;
 

@@ -17,6 +17,7 @@ set(cpsl_srcs
   Express.h
   SymbolTable.h
   SymbolTable.cpp
+  main.h
   main.cpp
   ${BISON_Parser_OUTPUTS}
   ${FLEX_Scanner_OUTPUTS}

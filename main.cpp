@@ -1,19 +1,12 @@
-#include<vector>
-#include<fstream>
-
-#include"Express.h"
-#include"SymbolTable.h"
+#include"main.h"
 extern int yyparse();
 
-//int is 0, bool is 1, char is 2, string is 3
-int** type_list = new int*[4];
-for(unsigned int i = 0; i < 4; i++)
-{
-	*type_list[i] = 5;
-}
+int* type_int = new int(5);
+int* type_bool = new int(5);
+int* type_char = new int(5);
+int* type_string = new int(5);
 
 SymbolTable symbol_table;
-
 std::vector<std::string> string_list;
 
 std::ofstream out("out.asm");
@@ -38,11 +31,28 @@ void outBlock()
 	}
 }
 
-void outWriteStatement(std::string cont)
+void outWriteStatement(std::vector<Express*>* vect)
 {
-	out << "la $a0, " << getStringListIdentifier(cont) << std::endl;
-	out << "li $v0, 4" << std::endl;
-	out << "syscall" << std::endl;
+	for(unsigned int i = 0; i < vect->size(); i++)
+	{
+		if(*vect[i]->type_ptr == type_string)
+		{
+			out << "li $v0, 4" << std::endl;
+			out << "la $a0, STR" << *vect[i]->raw_value << std::endl;
+		}
+		else if(*vect[i]->type_ptr == type_char)
+		{
+			out << "li $v0, 11" << std::endl;
+			out << "li $a0, " << *vect[i]->raw_value << std::endl;
+		}
+		else
+		{
+			out << "li $v0, 1" << std::endl;
+			out << "li $a0, " << *vect[i]->raw_value << std::endl;
+		}
+		
+		out << "syscall" << std::endl;
+	}
 }
 
 int main()
