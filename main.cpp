@@ -27,7 +27,7 @@ void outBlock()
 	out << ".data\n";
 	for(std::string str : string_list)
 	{
-		out << getStringListIdentifier(str) << ": asciiz " << str << std::endl;
+		out << getStringListIdentifier(str) << ": .asciiz " << str << std::endl;
 	}
 }
 
