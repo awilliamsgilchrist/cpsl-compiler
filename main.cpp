@@ -62,7 +62,7 @@ void outBlock()
 		out << getStringListIdentifier(str) << ": .asciiz " << str << std::endl;
 	}
 	
-	out << "GA:";
+	out << "GA: .align 2";
 }
 
 void outWriteStatement(std::vector<Express*>* vect)
