@@ -10,8 +10,8 @@ int auto_counter = 0;
 
 std::string label_auto()
 {
-	auto_counter++:
-	return "a" + std::to_strin(auto_counter);
+	auto_counter++;
+	return "a" + std::to_string(auto_counter);
 }
 
 SymbolTable symbol_table;
@@ -137,7 +137,7 @@ void outReadStatement(std::vector<std::string>* vect)
 		}
 		
 		symbol_table.removeExpr(vect->at(i));
-		symbol_table.add(vect->at(i), expr);
+		symbol_table.addExpr(vect->at(i), *expr);
 	}
 }
 
@@ -198,7 +198,7 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 	Express* nExpress;
 	
 	//This section does constant folding
-	if(!expr1->regist && !exprl->regist)
+	if(!expr1->regist && !expr2->regist)
 	{
 		int val1 = expr1->raw_val;
 		int val2 = expr2->raw_val;
@@ -338,7 +338,7 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	Express* nExpress;
 	
 	//This section does constant folding
-	if(!expr1->regist && !exprl->regist)
+	if(!expr1->regist && !expr2->regist)
 	{
 		int val1 = expr1->raw_val;
 		int val2 = expr2->raw_val;
