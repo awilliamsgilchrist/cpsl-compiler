@@ -58,6 +58,8 @@ void outBlock()
 
 void outWriteStatement(std::vector<Express*>* vect)
 {
+	std::cout << "This is getting called" << std::endl;
+
 	for(unsigned int i = 0; i < vect->size(); i++)
 	{
 		if(vect->at(i)->type_ptr == type_string)
