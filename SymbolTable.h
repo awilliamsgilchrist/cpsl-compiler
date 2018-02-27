@@ -2,6 +2,7 @@
 #define _SYMBOL_TABLE_H
 #include<map>
 #include<stack>
+#include<stdexcept>
 
 #include "Express.h"
 
@@ -26,6 +27,8 @@ class SymbolTable {
 		void stepOutContext();
 		void addType(std::string key, int* type_ptr);
 		void addExpr(std::string key, Express expr);
+		int* findType(std::string key);
+		Express* findExpr(std::string key);
 		void removeType(std::string key);
 		void removeExpr(std::string key);
 };

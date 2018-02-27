@@ -8,6 +8,7 @@ int* type_string = new int(5);
 
 SymbolTable symbol_table;
 std::vector<std::string> string_list;
+std::stack<std::string> register_pool;
 
 std::ofstream out("out.asm");
 
@@ -20,6 +21,28 @@ std::string getStringListIdentifier(std::string str)
 	return "STR" + std::to_string(index);
 }
 
+std::string getRegister()
+{
+	if(register_pool.size() > 0)
+	{
+		std::string reg = register_pool.top();
+		register_pool.pop();
+		return "$" + reg;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+void restoreRegister(std::string reg)
+{
+	string:: nReg = "it";
+	nReg[0] = reg[1];
+	nReg[1] = reg[2];
+	register_pool.push(nReg);
+}
+
 //Here follow the code generation functions
 
 void outBlock()
@@ -29,6 +52,8 @@ void outBlock()
 	{
 		out << getStringListIdentifier(str) << ": .asciiz " << str << std::endl;
 	}
+	
+	out << "GA:";
 }
 
 void outWriteStatement(std::vector<Express*>* vect)
@@ -55,9 +80,71 @@ void outWriteStatement(std::vector<Express*>* vect)
 	}
 }
 
+void SymbolTable::outAssignment(std::string str, Express* expr)
+{
+	Express* oldExpr = symbol_table.findExpr(str);
+	std::string reg = getRegister();
+	if(expr->type_ptr == oldExpr->type_ptr)
+	{
+		if(expr->type_ptr != type_string)
+		{
+			out << "li " << reg << ", " << expr->raw_val << std::endl;
+			out << "sw " << reg << ", " << symbol_table.offset << "($gp)" << std::endl;
+			
+			oldExpr->raw_val = symbol_table.offset;
+			oldExpr->regist = true;
+			symbol_table.offset += 4;
+		}
+		else
+		{
+			oldExpr->raw_val = expr->raw_val;
+		}
+	}
+	
+	restoreRegister(reg);
+}
+
 int main()
 {
 	out << ".text\n";
+	out << "main:" << std::endl;
+	out << "la GA, $gp" << std::endl;
+	
+	//Initialize register_pool
+	register_pool.push_back("a1");
+	register_pool.push_back("a2");
+	register_pool.push_back("a3");
+	register_pool.push_back("v1");
+	register_pool.push_back("s0");
+	register_pool.push_back("s1");
+	register_pool.push_back("s2");
+	register_pool.push_back("s3");
+	register_pool.push_back("s4");
+	register_pool.push_back("s5");
+	register_pool.push_back("s6");
+	register_pool.push_back("s7");
+	register_pool.push_back("t0");
+	register_pool.push_back("t1");
+	register_pool.push_back("t2");
+	register_pool.push_back("t3");
+	register_pool.push_back("t4");
+	register_pool.push_back("t5");
+	register_pool.push_back("st");
+	register_pool.push_back("t7");
+	register_pool.push_back("t8");
+	
+	symbol_table.addType("integer", type_int);
+	symbol_table.addType("INTEGER", type_int);
+	symbol_table.addType("boolean". type_bool);
+	symbol_table.addType("BOOLEAN", type_bool);
+	symbol_table.addType("char", type_char);
+	symbol_table.addType("CHAR", type_char);
+	symbol_table.addType("string", type_string);
+	symbol_table.addType("STRING", type_string);
+	
+	string_list.push_back("");
+	
+	symbol_table.stepInContext();
 	
 	yyparse();
 };

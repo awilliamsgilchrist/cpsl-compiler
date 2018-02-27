@@ -16,7 +16,9 @@ void yyerror(const char*);
   int int_val;
   char char_val;
   Express* expr_val;
+  std::vector<char*>* vect_str;
   std::vector<Express*>* vect_expr;
+  int* type_val;
 }
 
 %error-verbose
@@ -102,11 +104,11 @@ void yyerror(const char*);
 %type <int_val> FormalParameters  
 %type <int_val> FunctionCall 
 %type <int_val> INTSY 
-%type <int_val> IdentList 
+%type <vect_str> IdentList 
 %type <int_val> OptVar 
 %type <int_val> IfHead 
 %type <int_val> IfStatement 
-%type <int_val> LValue 
+%type <str_val> LValue 
 %type <int_val> OptArguments 
 %type <int_val> OptFormalParameters  
 %type <int_val> PSignature 
@@ -116,13 +118,13 @@ void yyerror(const char*);
 %type <int_val> RecordType 
 %type <int_val> RepeatStatement 
 %type <int_val> ReturnStatement 
-%type <int_val> SimpleType 
+%type <type_val> SimpleType 
 %type <int_val> Statement 
 %type <int_val> StatementList 
 %type <int_val> StopStatement 
 %type <int_val> ThenPart 
 %type <int_val> ToHead 
-%type <int_val> Type 
+%type <type_val> Type 
 %type <int_val> WhileHead 
 %type <int_val> WhileStatement 
 %type <vect_expr> WriteArgs 
@@ -204,12 +206,12 @@ TypeDecls    : TypeDecls TypeDecl
 TypeDecl : IDENTSY EQSY Type SCOLONSY {}
          ;
 
-Type : SimpleType {}
+Type : SimpleType {$$ = $1; }
      | RecordType {}
      | ArrayType {}
      ;
 
-SimpleType : IDENTSY {}
+SimpleType : IDENTSY {$$ = symbol_table.findType($1); }
            ;
 
 RecordType : RECORDSY FieldDecls ENDSY {}
@@ -222,8 +224,8 @@ FieldDecls : FieldDecls FieldDecl {}
 FieldDecl : IdentList COLONSY Type SCOLONSY {}
           ;
 
-IdentList : IdentList COMMASY IDENTSY {}
-          | IDENTSY {}
+IdentList : IdentList COMMASY IDENTSY {$1->push_back($3); $$ = $1;}
+          | IDENTSY {$$ = new std::vector<char*>($1, 1);}
           ;
 
 ArrayType : ARRAYSY LBRACKETSY Expression COLONSY Expression RBRACKETSY OFSY Type {}
@@ -237,7 +239,7 @@ VarDecls    : VarDecls VarDecl
             | VarDecl
             ;
 
-VarDecl : IdentList COLONSY Type SCOLONSY {}
+VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < IdentList->size(); i++){ Expression a($3, 0); symbol_table.addExpr($1->at(i), a);} }
         ;
 
 Statement : Assignment {}
@@ -253,7 +255,7 @@ Statement : Assignment {}
           | {}
           ;
 
-Assignment : LValue ASSIGNSY Expression {}
+Assignment : LValue ASSIGNSY Expression { outAssignment($1, $3); }
            ;
 
 IfStatement : IfHead ThenPart ElseIfList ElseClause ENDSY {}
@@ -325,9 +327,9 @@ Arguments : Arguments COMMASY Expression {}
           | Expression                   {}
           ;
 
-Expression : CHARCONSTSY                         {}
-           | CHRSY LPARENSY Expression RPARENSY  {}
-           | Expression ANDSY Expression         {}
+Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1);}
+           | CHRSY LPARENSY Expression RPARENSY  {if($3->type_ptr == type_int){$$ = new Express(type_char, $3->raw_val);}else{std::cerr << "Error: chr is undefined for non-integer parameters" <<std::endl;} }
+           | Expression ANDSY Expression         {if($1->raw_val > 0 && $3->raw_val > 0){$$ = new Express(type_bool, 1);}else{$$ = new Express(type_bool, 0);}}
            | Expression DIVSY Expression         {}
            | Expression EQSY Expression          {}
            | Expression GTESY Expression         {}
@@ -343,7 +345,7 @@ Expression : CHARCONSTSY                         {}
            | FunctionCall                        {}
            | INTSY                               {}
            | LPARENSY Expression RPARENSY        {}
-           | LValue                              {}
+           | LValue                              {$$ = symbol_table.findExpr($1);}
            | MINUSSY Expression %prec UMINUSSY   {}
            | NOTSY Expression                    {}
            | ORDSY LPARENSY Expression RPARENSY  {}
@@ -357,7 +359,7 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
 
 LValue : LValue DOTSY IDENTSY {}
        | LValue LBRACKETSY Expression RBRACKETSY {}
-       | IDENTSY {}
+       | IDENTSY {$$ = $1;}
        ;
 %%
 
