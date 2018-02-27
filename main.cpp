@@ -71,7 +71,7 @@ void outWriteStatement(std::vector<Express*>* vect)
 			out << "li $v0, 11" << std::endl;
 			if(vect->at(i)->regist)
 			{
-				out << "move $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+				out << "lw $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
 			}
 			else
 			{
@@ -83,11 +83,12 @@ void outWriteStatement(std::vector<Express*>* vect)
 			out << "li $v0, 1" << std::endl;
 			if(vect->at(i)->regist)
 			{
-				out << "move $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+				out << "lw $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
 			}
 			else
 			{
 				out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+			}
 		}
 		
 		out << "syscall" << std::endl;
