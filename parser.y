@@ -12,11 +12,11 @@ void yyerror(const char*);
 
 %union
 {
-  char * str_val;
+  char* str_val;
   int int_val;
   char char_val;
   Express* expr_val;
-  std::vector<char*>* vect_str;
+  std::vector<std::string>* vect_str;
   std::vector<Express*>* vect_expr;
   int* type_val;
 }
@@ -225,7 +225,7 @@ FieldDecl : IdentList COLONSY Type SCOLONSY {}
           ;
 
 IdentList : IdentList COMMASY IDENTSY {$1->push_back($3); $$ = $1;}
-          | IDENTSY {$$ = new std::vector<char*>($1, 1);}
+          | IDENTSY {$$ = new std::vector<std::string>(1, $1);}
           ;
 
 ArrayType : ARRAYSY LBRACKETSY Expression COLONSY Expression RBRACKETSY OFSY Type {}
@@ -239,7 +239,7 @@ VarDecls    : VarDecls VarDecl
             | VarDecl
             ;
 
-VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < IdentList->size(); i++){ Expression a($3, 0); symbol_table.addExpr($1->at(i), a);} }
+VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < $1->size(); i++){ Express a($3, 0); symbol_table.addExpr($1->at(i), a);} }
         ;
 
 Statement : Assignment {}

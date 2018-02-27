@@ -37,7 +37,7 @@ std::string getRegister()
 
 void restoreRegister(std::string reg)
 {
-	string:: nReg = "it";
+	std::string nReg = "it";
 	nReg[0] = reg[1];
 	nReg[1] = reg[2];
 	register_pool.push(nReg);
@@ -80,7 +80,7 @@ void outWriteStatement(std::vector<Express*>* vect)
 	}
 }
 
-void SymbolTable::outAssignment(std::string str, Express* expr)
+void outAssignment(std::string str, Express* expr)
 {
 	Express* oldExpr = symbol_table.findExpr(str);
 	std::string reg = getRegister();
@@ -111,31 +111,31 @@ int main()
 	out << "la GA, $gp" << std::endl;
 	
 	//Initialize register_pool
-	register_pool.push_back("a1");
-	register_pool.push_back("a2");
-	register_pool.push_back("a3");
-	register_pool.push_back("v1");
-	register_pool.push_back("s0");
-	register_pool.push_back("s1");
-	register_pool.push_back("s2");
-	register_pool.push_back("s3");
-	register_pool.push_back("s4");
-	register_pool.push_back("s5");
-	register_pool.push_back("s6");
-	register_pool.push_back("s7");
-	register_pool.push_back("t0");
-	register_pool.push_back("t1");
-	register_pool.push_back("t2");
-	register_pool.push_back("t3");
-	register_pool.push_back("t4");
-	register_pool.push_back("t5");
-	register_pool.push_back("st");
-	register_pool.push_back("t7");
-	register_pool.push_back("t8");
+	register_pool.push("a1");
+	register_pool.push("a2");
+	register_pool.push("a3");
+	register_pool.push("v1");
+	register_pool.push("s0");
+	register_pool.push("s1");
+	register_pool.push("s2");
+	register_pool.push("s3");
+	register_pool.push("s4");
+	register_pool.push("s5");
+	register_pool.push("s6");
+	register_pool.push("s7");
+	register_pool.push("t0");
+	register_pool.push("t1");
+	register_pool.push("t2");
+	register_pool.push("t3");
+	register_pool.push("t4");
+	register_pool.push("t5");
+	register_pool.push("t6");
+	register_pool.push("t7");
+	register_pool.push("t8");
 	
 	symbol_table.addType("integer", type_int);
 	symbol_table.addType("INTEGER", type_int);
-	symbol_table.addType("boolean". type_bool);
+	symbol_table.addType("boolean", type_bool);
 	symbol_table.addType("BOOLEAN", type_bool);
 	symbol_table.addType("char", type_char);
 	symbol_table.addType("CHAR", type_char);

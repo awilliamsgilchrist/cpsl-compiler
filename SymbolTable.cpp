@@ -22,7 +22,7 @@ void SymbolTable::addExpr(std::string key, Express expr)
 	exprMap.top().emplace(key, expr);
 }
 
-void SymbolTable::findType(std::string key)
+int* SymbolTable::findType(std::string key)
 {
 	std::stack<std::map<std::string, int*>> checkTable(typeMap);
 	
