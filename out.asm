@@ -1,6 +1,6 @@
 .text
 main:
-la GA, $gp
+la $gp, GA
 li $v0, 4
 la $a0, STR1
 syscall

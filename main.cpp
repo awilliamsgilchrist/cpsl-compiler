@@ -23,24 +23,33 @@ std::string getStringListIdentifier(std::string str)
 
 std::string getRegister()
 {
+	std::cout << "getRegister has been called" << std::endl;
+	
 	if(register_pool.size() > 0)
 	{
 		std::string reg = register_pool.top();
 		register_pool.pop();
+		
+		std::cout << "getRegister has exited" << std::endl;
 		return "$" + reg;
 	}
 	else
 	{
+		std::cout << "getRegister has exited" << std::endl;
 		return "";
 	}
 }
 
 void restoreRegister(std::string reg)
 {
+	std::cout << "restoreRegister has been called" << std::endl;
+	
 	std::string nReg = "it";
 	nReg[0] = reg[1];
 	nReg[1] = reg[2];
 	register_pool.push(nReg);
+	
+	std::cout << "restoreRegister has been exited" << std::endl;
 }
 
 //Here follow the code generation functions
@@ -58,8 +67,8 @@ void outBlock()
 
 void outWriteStatement(std::vector<Express*>* vect)
 {
-	std::cout << "This is getting called" << std::endl;
-
+	std::cout << "outWriteStatement has been called" << std::endl;
+	
 	for(unsigned int i = 0; i < vect->size(); i++)
 	{
 		if(vect->at(i)->type_ptr == type_string)
@@ -80,10 +89,14 @@ void outWriteStatement(std::vector<Express*>* vect)
 		
 		out << "syscall" << std::endl;
 	}
+	
+	std::cout << "outWriteStatement has exited" << std::endl;
 }
 
 void outAssignment(std::string str, Express* expr)
 {
+	std::cout << "outAssignment has been called" << std::endl;
+	
 	Express* oldExpr = symbol_table.findExpr(str);
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr)
@@ -104,13 +117,15 @@ void outAssignment(std::string str, Express* expr)
 	}
 	
 	restoreRegister(reg);
+	
+	std::cout << "outAssignment has exited" << std::endl;
 }
 
 int main()
 {
 	out << ".text\n";
 	out << "main:" << std::endl;
-	out << "la GA, $gp" << std::endl;
+	out << "la $gp, GA" << std::endl;
 	
 	//Initialize register_pool
 	register_pool.push("a1");
@@ -147,6 +162,8 @@ int main()
 	string_list.push_back("");
 	
 	symbol_table.stepInContext();
+	
+	std::cout << "About to enter yyparse" << std::endl;
 	
 	yyparse();
 };
