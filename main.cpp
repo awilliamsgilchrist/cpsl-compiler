@@ -109,6 +109,8 @@ void outAssignment(std::string str, Express* expr)
 			oldExpr->raw_val = symbol_table.offset;
 			oldExpr->regist = true;
 			symbol_table.offset += 4;
+			symbol_table.removeExpr(str);
+			symbol_table.addExpr(str, *oldExpr);
 		}
 		else
 		{
