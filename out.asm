@@ -42,7 +42,7 @@ la $a0, STR5
 syscall
 li $v0, 5
 syscall
-sw $v0, 0($gp)
+sb $v0, 0($gp)
 li $v0, 4
 la $a0, STR6
 syscall

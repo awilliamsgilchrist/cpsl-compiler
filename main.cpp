@@ -126,11 +126,11 @@ void outReadStatement(std::vector<std::string>* vect)
 		
 		if(expr->regist)
 		{
-			out << "sw $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
+			out << "sb $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
 		}
 		else
 		{
-			out << "sw $v0, " << symbol_table.offset << GLOBAL_PTR << std::endl;
+			out << "sb $v0, " << symbol_table.offset << GLOBAL_PTR << std::endl;
 			expr->raw_val = symbol_table.offset;
 			expr->regist = true;
 			symbol_table.offset += 4;
