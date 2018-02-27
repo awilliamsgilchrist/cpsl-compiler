@@ -48,7 +48,7 @@ la $a0, STR6
 syscall
 li $v0, 5
 syscall
-sw $v0, 4($gp)
+sb $v0, 4($gp)
 li $v0, 11
 li $a0, 10
 syscall
@@ -173,7 +173,7 @@ syscall
 li $v0, 11
 li $a0, 10
 syscall
-lw $t8, 1994208516($gp)
+lw $t8, 1993721092($gp)
 lw $t7, 4($gp)
 bne $t8, $t7, a12
 li $t8, 0
