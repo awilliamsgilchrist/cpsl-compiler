@@ -79,7 +79,7 @@ void outWriteStatement(std::vector<Express*>* vect)
 			out << "li $v0, 11" << std::endl;
 			if(vect->at(i)->regist)
 			{
-				out << "lw $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+				out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
 			}
 			else
 			{
@@ -91,7 +91,7 @@ void outWriteStatement(std::vector<Express*>* vect)
 			out << "li $v0, 1" << std::endl;
 			if(vect->at(i)->regist)
 			{
-				out << "lw $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+				out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
 			}
 			else
 			{
@@ -165,13 +165,15 @@ void outAssignment(std::string str, Express* expr)
 	}
 	else if(expr->type_ptr == oldExpr->type_ptr)
 	{
-		out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+		
 		if(oldExpr->regist)
 		{
+			out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
 			out << "sw " << reg << oldExpr->raw_val << GLOBAL_PTR << std::endl;
 		}
 		else
 		{
+			out << "li " << reg << ", " << expr->raw_val << std::endl;
 			out << "sw " << reg << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
 			
 			oldExpr->raw_val = symbol_table.offset;
@@ -337,8 +339,6 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 {
 	Express* nExpress;
 	
-	std::cout << expr1->raw_val << std::endl << expr1->regist << std::endl;
-	std::cout << expr2->raw_val << std::endl << expr2->regist << std::endl;
 	
 	//This section does constant folding
 	if(!expr1->regist && !expr2->regist)
