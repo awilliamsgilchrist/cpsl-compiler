@@ -464,6 +464,11 @@ int main()
 	symbol_table.addType("string", type_string);
 	symbol_table.addType("STRING", type_string);
 	
+	symbol_table.addExpr("true", new Expr(type_bool, 1));
+	symbol_table.addExpr("TRUE", new Expr(type_bool, 1));
+	symbol_table.addExpr("false", new Expr(type_bool, 0));
+	symbol_table.addExpr("FALSE", new Expr(type_bool, 0));
+	
 	string_list.push_back("");
 	
 	symbol_table.stepInContext();
