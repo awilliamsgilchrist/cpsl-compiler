@@ -288,7 +288,7 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 	else if(kind == "great")
 	{
 		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
-		out << "bltz " << reg1 << ", " << label << std::endl;
+		out << "blez " << reg1 << ", " << label << std::endl;
 		out << "li " << reg1 << ", 1" << std::endl;
 		out << "j " << endLabel << std::endl;
 		out << label << ": li " << reg1 << ", 0" << std::endl;
@@ -304,7 +304,7 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 	else if(kind == "greatEq")
 	{
 		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
-		out << "blez " << reg1 << ", " << label << std::endl;
+		out << "bltz " << reg1 << ", " << label << std::endl;
 		out << "li " << reg1 << ", 1" << std::endl;
 		out << "j " << endLabel << std::endl;
 		out << label << ": li " << reg1 << ", 0" << std::endl;
@@ -339,7 +339,6 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 {
 	Express* nExpress;
 	
-	std::cout << "Expr1 " << expr1->raw_val << ", " << expr1->regist << std::endl;
 	
 	//This section does constant folding
 	if(!expr1->regist && !expr2->regist)
@@ -370,36 +369,26 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 		
 		return nExpress;
 	}
-	std::cout << expr1->raw_val << std::endl;
 	std::string reg1 = getRegister();
-	std::cout << expr1->raw_val << std::endl;
 	std::string reg2 = getRegister();
-	std::cout << expr1->raw_val << std::endl;
 	std::string label = label_auto();
 	
-	std::cout << expr1->raw_val << std::endl;
 	
 	if(expr1->regist)
 	{
-		std::cout << expr1->raw_val << std::endl;
 		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
-		std::cout << expr1->raw_val << std::endl;
-		std::cout << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
 	}
 	else
 	{
 		out << "li " << reg1 << ", " << expr1->raw_val << std::endl;
-		std::cout << "li " << reg1 << ", " << expr1->raw_val << std::endl;
 	}
 	if(expr2->regist)
 	{
 		out << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
-		std::cout << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
 	}
 	else
 	{
 		out << "li " << reg2 << ", " << expr2->raw_val << std::endl;
-		std::cout << "li " << reg2 << ", " << expr2->raw_val << std::endl;
 	}
 	
 	
@@ -479,7 +468,6 @@ int main()
 	
 	symbol_table.stepInContext();
 	
-	std::cout << "About to enter yyparse" << std::endl;
 	
 	yyparse();
 };
