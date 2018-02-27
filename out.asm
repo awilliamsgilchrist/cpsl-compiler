@@ -108,7 +108,7 @@ syscall
 li $v0, 11
 li $a0, 10
 syscall
-lw $t8, 2($gp)
+lw $t8, 20($gp)
 lw $t7, 4($gp)
 div $t8, $t7
 mfhi $t8
