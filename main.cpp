@@ -23,33 +23,25 @@ std::string getStringListIdentifier(std::string str)
 
 std::string getRegister()
 {
-	std::cout << "getRegister has been called" << std::endl;
-	
 	if(register_pool.size() > 0)
 	{
 		std::string reg = register_pool.top();
 		register_pool.pop();
 		
-		std::cout << "getRegister has exited" << std::endl;
 		return "$" + reg;
 	}
 	else
 	{
-		std::cout << "getRegister has exited" << std::endl;
 		return "";
 	}
 }
 
 void restoreRegister(std::string reg)
 {
-	std::cout << "restoreRegister has been called" << std::endl;
-	
 	std::string nReg = "it";
 	nReg[0] = reg[1];
 	nReg[1] = reg[2];
 	register_pool.push(nReg);
-	
-	std::cout << "restoreRegister has been exited" << std::endl;
 }
 
 //Here follow the code generation functions
@@ -67,8 +59,6 @@ void outBlock()
 
 void outWriteStatement(std::vector<Express*>* vect)
 {
-	std::cout << "outWriteStatement has been called" << std::endl;
-	
 	for(unsigned int i = 0; i < vect->size(); i++)
 	{
 		if(vect->at(i)->type_ptr == type_string)
@@ -79,61 +69,52 @@ void outWriteStatement(std::vector<Express*>* vect)
 		else if(vect->at(i)->type_ptr == type_char)
 		{
 			out << "li $v0, 11" << std::endl;
-			out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+			if(vect->at(i)->regist)
+			{
+				out << "move $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+			}
+			else
+			{
+				out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+			}
 		}
 		else
 		{
 			out << "li $v0, 1" << std::endl;
-			out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+			if(vect->at(i)->regist)
+			{
+				out << "move $a0, " << vect->at(i)->raw_val << "($gp)" << std::endl;
+			}
+			else
+			{
+				out << "li $a0, " << vect->at(i)->raw_val << std::endl;
 		}
 		
 		out << "syscall" << std::endl;
 	}
-	
-	std::cout << "outWriteStatement has exited" << std::endl;
 }
 
 void outAssignment(std::string str, Express* expr)
 {
-	std::cout << "outAssignment has been called" << std::endl;
-	
-	for(std::map<std::string, Express>::iterator it = symbol_table.exprMap.top().begin(); it != symbol_table.exprMap.top().end(); ++it)
-	{
-		std::cout << it->first << std::endl;
-		std::cout << symbol_table.findExpr(it->first)->raw_val <<std::endl;
-	}
-	
 	Express* oldExpr = symbol_table.findExpr(str);
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr)
 	{
-		std::cout << "1";
-		
 		if(expr->type_ptr != type_string)
 		{
-			std::cout << "2";
 			out << "li " << reg << ", " << expr->raw_val << std::endl;
-			std::cout << "3";
 			out << "sw " << reg << ", " << symbol_table.offset << "($gp)" << std::endl;
-			std::cout << "4";
 			
 			oldExpr->raw_val = symbol_table.offset;
-			std::cout << "5";
 			oldExpr->regist = true;
-			std::cout << "6";
 			symbol_table.offset += 4;
-			std::cout << "7";
 		}
 		else
 		{
-			std::cout << "8";
 			oldExpr->raw_val = expr->raw_val;
 		}
 	}
-	std::cout << "9";
 	restoreRegister(reg);
-	
-	std::cout << "outAssignment has exited" << std::endl;
 }
 
 int main()
