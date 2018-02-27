@@ -468,6 +468,5 @@ int main()
 	
 	symbol_table.stepInContext();
 	
-	
 	yyparse();
 };
