@@ -101,21 +101,30 @@ void outAssignment(std::string str, Express* expr)
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr)
 	{
+		std::cout << "1";
+		
 		if(expr->type_ptr != type_string)
 		{
+			std::cout << "2";
 			out << "li " << reg << ", " << expr->raw_val << std::endl;
+			std::cout << "3";
 			out << "sw " << reg << ", " << symbol_table.offset << "($gp)" << std::endl;
+			std::cout << "4";
 			
 			oldExpr->raw_val = symbol_table.offset;
+			std::cout << "5";
 			oldExpr->regist = true;
+			std::cout << "6";
 			symbol_table.offset += 4;
+			std::cout << "7";
 		}
 		else
 		{
+			std::cout << "8";
 			oldExpr->raw_val = expr->raw_val;
 		}
 	}
-	
+	std::cout << "9";
 	restoreRegister(reg);
 	
 	std::cout << "outAssignment has exited" << std::endl;
