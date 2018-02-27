@@ -370,9 +370,11 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 		
 		return nExpress;
 	}
-	
+	std::cout << expr1->raw_val << std::endl;
 	std::string reg1 = getRegister();
+	std::cout << expr1->raw_val << std::endl;
 	std::string reg2 = getRegister();
+	std::cout << expr1->raw_val << std::endl;
 	std::string label = label_auto();
 	
 	std::cout << expr1->raw_val << std::endl;
