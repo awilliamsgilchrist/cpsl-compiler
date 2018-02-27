@@ -1,10 +1,11 @@
 .text
 main:
 la $gp, GA
-li $v0, 4
-la $a0, STR1
+li $t8, 42
+sw $t8, 0($gp)
+li $v0, 1
+li $a0, 0
 syscall
 .data
 STR0: .asciiz 
-STR1: .asciiz "Hello World!"
 GA:

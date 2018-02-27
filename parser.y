@@ -343,7 +343,7 @@ Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1
            | Expression ORSY Expression          {}
            | Expression PLUSSY Expression        {}
            | FunctionCall                        {}
-           | INTSY                               {}
+           | INTSY                               {$$ = new Express(type_int, $1); }
            | LPARENSY Expression RPARENSY        {}
            | LValue                              {$$ = symbol_table.findExpr($1);}
            | MINUSSY Expression %prec UMINUSSY   {}

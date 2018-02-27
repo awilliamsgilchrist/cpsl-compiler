@@ -100,6 +100,7 @@ void outAssignment(std::string str, Express* expr)
 	for(std::map<std::string, Express>::iterator it = symbol_table.exprMap.top().begin(); it != symbol_table.exprMap.top().end(); ++it)
 	{
 		std::cout << it->first << std::endl;
+		std::cout << symbol_table.findExpr(it->first)->raw_val <<std::endl;
 	}
 	
 	Express* oldExpr = symbol_table.findExpr(str);
