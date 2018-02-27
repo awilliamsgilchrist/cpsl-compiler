@@ -42,13 +42,15 @@ la $a0, STR5
 syscall
 li $v0, 5
 syscall
-sb $v0, 0($gp)
+move $t0, $v0
+sw $t0, 0($gp)
 li $v0, 4
 la $a0, STR6
 syscall
 li $v0, 5
 syscall
-sb $v0, 4($gp)
+move $t0, $v0
+sw $t0, 4($gp)
 li $v0, 11
 li $a0, 10
 syscall
@@ -245,4 +247,4 @@ STR14: .asciiz "a>b="
 STR15: .asciiz "a<>b="
 STR16: .asciiz "a<=b="
 STR17: .asciiz "a>=b="
-GA:
+GA: .align 2

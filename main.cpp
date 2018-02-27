@@ -126,11 +126,11 @@ void outReadStatement(std::vector<std::string>* vect)
 		
 		if(expr->regist)
 		{
-			out << "sb $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
+			out << "sw $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
 		}
 		else
 		{
-			out << "sb $v0, " << symbol_table.offset << GLOBAL_PTR << std::endl;
+			out << "sw $v0, " << symbol_table.offset << GLOBAL_PTR << std::endl;
 			expr->raw_val = symbol_table.offset;
 			expr->regist = true;
 			symbol_table.offset += 4;
@@ -336,6 +336,9 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 {
 	Express* nExpress;
+	
+	std::cout << expr1->raw_val << std::cout << expr1->regist << std::endl;
+	std::cout << expr2->raw_val << std::cout << expr2->regist << std::endl;
 	
 	//This section does constant folding
 	if(!expr1->regist && !expr2->regist)
