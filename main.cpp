@@ -337,8 +337,8 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 {
 	Express* nExpress;
 	
-	std::cout << expr1->raw_val << std::cout << expr1->regist << std::endl;
-	std::cout << expr2->raw_val << std::cout << expr2->regist << std::endl;
+	std::cout << expr1->raw_val << std::endl << expr1->regist << std::endl;
+	std::cout << expr2->raw_val << std::endl << expr2->regist << std::endl;
 	
 	//This section does constant folding
 	if(!expr1->regist && !expr2->regist)
