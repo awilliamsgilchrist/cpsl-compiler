@@ -97,6 +97,11 @@ void outAssignment(std::string str, Express* expr)
 {
 	std::cout << "outAssignment has been called" << std::endl;
 	
+	for(std::map<std::string, Express>::iterator it = symbol_table.exprMap.top().begin(); it != symbol_table.exprMap.top().end(); ++it)
+	{
+		std::cout << it->first << std::endl;
+	}
+	
 	Express* oldExpr = symbol_table.findExpr(str);
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr)
