@@ -113,7 +113,7 @@ void yyerror(const char*);
 %type <int_val> OptFormalParameters  
 %type <int_val> PSignature 
 %type <int_val> ProcedureCall
-%type <int_val> ReadArgs
+%type <vect_str> ReadArgs
 %type <int_val> ReadStatement 
 %type <int_val> RecordType 
 %type <int_val> RepeatStatement 
@@ -304,11 +304,11 @@ ReturnStatement : RETURNSY Expression {}
                 ;
 
 
-ReadStatement : READSY LPARENSY ReadArgs RPARENSY {}
+ReadStatement : READSY LPARENSY ReadArgs RPARENSY { outReadStatement($3); }
               ;
 
-ReadArgs : ReadArgs COMMASY LValue {}
-         | LValue                  {}
+ReadArgs : ReadArgs COMMASY LValue {$1->push_back($3); $$ = $1; }
+         | LValue                  {$$ = new std::vector<std::string>(1, $1); }
          ;
 
 WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement($3);}
@@ -328,23 +328,23 @@ Arguments : Arguments COMMASY Expression {}
           ;
 
 Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1);}
-           | CHRSY LPARENSY Expression RPARENSY  {if($3->type_ptr == type_int){$$ = new Express(type_char, $3->raw_val);}else{std::cerr << "Error: chr is undefined for non-integer parameters" <<std::endl;} }
-           | Expression ANDSY Expression         {if($1->raw_val > 0 && $3->raw_val > 0){$$ = new Express(type_bool, 1);}else{$$ = new Express(type_bool, 0);}}
-           | Expression DIVSY Expression         {}
-           | Expression EQSY Expression          {}
-           | Expression GTESY Expression         {}
-           | Expression GTSY Expression          {}
-           | Expression LTESY Expression         {}
-           | Expression LTSY Expression          {}
-           | Expression MINUSSY Expression       {}
-           | Expression MODSY Expression         {}
-           | Expression MULTSY Expression        {}
-           | Expression NEQSY Expression         {}
-           | Expression ORSY Expression          {}
-           | Expression PLUSSY Expression        {}
+           | CHRSY LPARENSY Expression RPARENSY  {}
+           | Expression ANDSY Expression         {$$ = boolCompare($1, $3, "and"); }
+           | Expression DIVSY Expression         {$$ = intCompare($1, $3, "div"); }
+           | Expression EQSY Expression          {$$ = boolCompare($1, $3, "eq"); }
+           | Expression GTESY Expression         {$$ = boolCompare($1, $3, "greatEq"); }
+           | Expression GTSY Expression          {$$ = boolCompare($1, $3, "great"); }
+           | Expression LTESY Expression         {$$ = boolCompare($1, $3, "lessEq"); }
+           | Expression LTSY Expression          {$$ = boolCompare($1, $3, "less"); }
+           | Expression MINUSSY Expression       {$$ = intCompare($1, $3, "sub"); }
+           | Expression MODSY Expression         {$$ = intCompare($1, $3, "mod"); }
+           | Expression MULTSY Expression        {$$ = intCompare($1, $3, "mult"); }
+           | Expression NEQSY Expression         {$$ = boolCompare($1, $3, "neq"); }
+           | Expression ORSY Expression          {$$ = boolCompare($1, $3, "or"); }
+           | Expression PLUSSY Expression        {$$ = intCompare($1, $3, "plus"); }
            | FunctionCall                        {}
            | INTSY                               {$$ = new Express(type_int, $1); }
-           | LPARENSY Expression RPARENSY        {}
+           | LPARENSY Expression RPARENSY        {$$ = $2; }
            | LValue                              {$$ = symbol_table.findExpr($1);}
            | MINUSSY Expression %prec UMINUSSY   {}
            | NOTSY Expression                    {}

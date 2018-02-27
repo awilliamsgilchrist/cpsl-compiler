@@ -6,6 +6,14 @@ int* type_bool = new int(5);
 int* type_char = new int(5);
 int* type_string = new int(5);
 
+int auto_counter = 0;
+
+std::string label_auto()
+{
+	auto_counter++:
+	return "a" + std::to_strin(auto_counter);
+}
+
 SymbolTable symbol_table;
 std::vector<std::string> string_list;
 std::stack<std::string> register_pool;
@@ -95,16 +103,54 @@ void outWriteStatement(std::vector<Express*>* vect)
 	}
 }
 
+void outReadStatement(std::vector<std::string>* vect)
+{
+	for(unsigned int i = 0; i < vect->size(); i++)
+	{
+		Express* expr = symbol_table.findExpr(vect->at(i));
+		
+		if(expr->type_ptr == type_int)
+		{
+			out << "li $v0, 5" << std::endl;
+		}
+		else if(expr->type_ptr == type_char)
+		{
+			out << "li $v0, 12" << std::endl;
+		}
+		else
+		{
+			std::cerr << "Error: read must have parameters of type integer or char" << std::endl;
+		}
+		
+		out << "syscall" << std::endl;
+		
+		if(expr->regist)
+		{
+			out << "sw $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
+		}
+		else
+		{
+			out << "sw $v0, " << symbol_table.offset << GLOBAL_PTR << std::endl;
+			expr->raw_val = symbol_table.offset;
+			expr->regist = true;
+			symbol_table.offset += 4;
+		}
+		
+		symbol_table.removeExpr(vect->at(i));
+		symbol_table.add(vect->at(i), expr);
+	}
+}
+
 void outAssignment(std::string str, Express* expr)
 {
 	Express* oldExpr = symbol_table.findExpr(str);
 	std::string reg = getRegister();
-	if(expr->type_ptr == oldExpr->type_ptr)
+	if(expr->type_ptr == oldExpr->type_ptr && !expr->regist)
 	{
 		if(expr->type_ptr != type_string)
 		{
 			out << "li " << reg << ", " << expr->raw_val << std::endl;
-			out << "sw " << reg << ", " << symbol_table.offset << "($gp)" << std::endl;
+			out << "sw " << reg << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
 			
 			oldExpr->raw_val = symbol_table.offset;
 			oldExpr->regist = true;
@@ -117,7 +163,264 @@ void outAssignment(std::string str, Express* expr)
 			oldExpr->raw_val = expr->raw_val;
 		}
 	}
+	else if(expr->type_ptr == oldExpr->type_ptr)
+	{
+		out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+		if(oldExpr->regist)
+		{
+			out << "sw " << reg << oldExpr->raw_val << GLOBAL_PTR << std::endl;
+		}
+		else
+		{
+			out << "sw " << reg << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
+			
+			oldExpr->raw_val = symbol_table.offset;
+			oldExpr->regist = true;
+			symbol_table.offset += 4;
+		}
+		
+		symbol_table.removeExpr(str);
+		symbol_table.addExpr(str, *oldExpr);
+	}
+	else 
+	{
+		std::cerr << "Error: lvalue " << str << " and rvalue incompatible types" << std::endl;
+	}
 	restoreRegister(reg);
+}
+
+Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
+{
+	std::string reg1 = getRegister();
+	std::string reg2 = getRegister();
+	std::string label = label_auto();
+	std::string endLabel = label_auto();
+	Express* nExpress;
+	
+	//This section does constant folding
+	if(!expr1->regist && !exprl->regist)
+	{
+		int val1 = expr1->raw_val;
+		int val2 = expr2->raw_val;
+		
+		if(kind == "and")
+		{
+			nExpress = new Express(type_bool, (int)(val1 && val2));
+		}
+		else if(kind == "or")
+		{
+			nExpress = new Express(type_bool, (int)(val1 || val2));
+		}
+		else if(kind == "less")
+		{
+			nExpress = new Express(type_bool, (int)(val1 < val2));
+		}
+		else if(kind == "great")
+		{
+			nExpress = new Express(type_bool, (int)(val1 > val2));
+		}
+		else if(kind == "lessEq")
+		{
+			nExpress = new Express(type_bool, (int)(val1 <= val2));
+		}
+		else if(kind == "great")
+		{
+			nExpress = new Express(type_bool, (int)(val1 >= val2));
+		}
+		else if(kind == "eq")
+		{
+			nExpress = new Express(type_bool, (int)(val1 == val2));
+		}
+		else if(kind == "neq")
+		{
+			nExpress = new Express(type_bool, (int)(val1 != val2));
+		}
+		
+		restoreRegister(reg1);
+		restoreRegister(reg2);
+		return nExpress;
+	}
+	
+	if(expr1->regist)
+	{
+		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
+	}
+	else
+	{
+		out << "li " << reg1 << ", " << expr1->raw_val << std::endl;
+	}
+	if(expr2->regist)
+	{
+		out << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
+	}
+	else
+	{
+		out << "li " << reg2 << ", " << expr2->raw_val << std::endl;
+	}
+	
+	
+	if(kind == "and")
+	{
+		out << "beq $zero, " << reg1 << ", " << label << std::endl;
+		out << "beq $zero, " << reg2 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 1" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 0" << std::endl;
+	}
+	else if(kind == "or")
+	{
+		out << "bne $zero, " << reg1 << ", " << label << std::endl;
+		out << "bne $zero, " << reg2 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 0" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 1" << std::endl;
+	}
+	else if(kind == "less")
+	{
+		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+		out << "bltz " << reg1 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 0" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 1" << std::endl;
+	}
+	else if(kind == "great")
+	{
+		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+		out << "bltz " << reg1 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 1" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 0" << std::endl;
+	}
+	else if(kind == "lessEq")
+	{
+		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+		out << "blez " << reg1 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 0" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 1" << std::endl;
+	}
+	else if(kind == "greatEq")
+	{
+		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+		out << "blez " << reg1 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 1" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 0" << std::endl;
+	}
+	else if(kind == "eq")
+	{
+		out << "beq " << reg1 << ", " << reg2 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 0" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 1" << std::endl;
+	}
+	else if(kind == "neq")
+	{
+		out << "bne " << reg1 << ", " << reg2 << ", " << label << std::endl;
+		out << "li " << reg1 << ", 0" << std::endl;
+		out << "j " << endLabel << std::endl;
+		out << label << ": li " << reg1 << ", 1" << std::endl;
+	}
+	
+	out << endLabel << ": " << std::endl;
+	out << "sw " << reg1 << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
+	
+	nExpress = new Express(type_bool, symbol_table.offset, true);
+	symbol_table.offset += 4;
+	
+	restoreRegister(reg1);
+	restoreRegister(reg2);
+	return nExpress;
+}
+
+Express* intCompare(Express* expr1, Express* expr2, std::string kind)
+{
+	Express* nExpress;
+	
+	//This section does constant folding
+	if(!expr1->regist && !exprl->regist)
+	{
+		int val1 = expr1->raw_val;
+		int val2 = expr2->raw_val;
+		
+		if(kind == "plus")
+		{
+			nExpress = new Express(type_int, val1 + val2);
+		}
+		else if(kind == "sub")
+		{
+			nExpress = new Express(type_int, val1 - val2);
+		}
+		else if(kind == "mult")
+		{
+			nExpress = new Express(type_int, val1 * val2);
+		}
+		else if(kind == "div")
+		{
+			nExpress = new Express(type_int, val1 / val2);
+		}
+		else if(kind == "mod")
+		{
+			nExpress = new Express(type_int, val1 % val2);
+		}
+		
+		return nExpress;
+	}
+	
+	std::string reg1 = getRegister();
+	std::string reg2 = getRegister();
+	std::string label = label_auto();
+	
+	if(expr1->regist)
+	{
+		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
+	}
+	else
+	{
+		out << "li " << reg1 << ", " << expr1->raw_val << std::endl;
+	}
+	if(expr2->regist)
+	{
+		out << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
+	}
+	else
+	{
+		out << "li " << reg2 << ", " << expr2->raw_val << std::endl;
+	}
+	
+	
+	if(kind == "plus")
+	{
+		out << "add " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+	}
+	else if(kind == "sub")
+	{
+		out << "sub " << reg1 << ", " << reg1 << ", " << reg2 << std::endl;
+	}
+	else if(kind == "mult")
+	{
+		out << "mult " << reg1 << ", " << reg2 << std::endl;
+		out << "mflo " << reg1 <<  std::endl;
+	}
+	else if(kind == "div")
+	{
+		out << "div " << reg1 << ", " << reg2 << std::endl;
+		out << "mflo " << reg1 <<  std::endl; 
+	}
+	else if(kind == "mod")
+	{
+		out << "div " << reg1 << ", " << reg2 << std::endl;
+		out << "mfhi " << reg1 << std::endl;
+	}
+	
+	out << "sw " << reg1 << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
+	
+	nExpress = new Express(type_int, symbol_table.offset, true);
+	symbol_table.offset += 4;
+	
+	restoreRegister(reg1);
+	restoreRegister(reg2);
+	return nExpress;
 }
 
 int main()
