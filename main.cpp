@@ -375,9 +375,13 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	std::string reg2 = getRegister();
 	std::string label = label_auto();
 	
+	std::cout << expr1->raw_val << std::endl;
+	
 	if(expr1->regist)
 	{
+		std::cout << expr1->raw_val << std::endl;
 		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
+		std::cout << expr1->raw_val << std::endl;
 		std::cout << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
 	}
 	else
