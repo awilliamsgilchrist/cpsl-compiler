@@ -586,7 +586,6 @@ int main()
 	symbol_table.addExpr("FALSE", *(new Express(type_bool, 0)));
 	
 	string_list.push_back("");
-	
 	symbol_table.stepInContext();
 	
 	yyparse();
