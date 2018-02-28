@@ -328,7 +328,7 @@ Arguments : Arguments COMMASY Expression {}
           ;
 
 Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1);}
-           | CHRSY LPARENSY Expression RPARENSY  {}
+           | CHRSY LPARENSY Expression RPARENSY  {$$ = uniCompare($3, "chr"); }
            | Expression ANDSY Expression         {$$ = boolCompare($1, $3, "and"); }
            | Expression DIVSY Expression         {$$ = intCompare($1, $3, "div"); }
            | Expression EQSY Expression          {$$ = boolCompare($1, $3, "eq"); }
@@ -346,12 +346,12 @@ Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1
            | INTSY                               {$$ = new Express(type_int, $1); }
            | LPARENSY Expression RPARENSY        {$$ = $2; }
            | LValue                              {$$ = symbol_table.findExpr($1);}
-           | MINUSSY Expression %prec UMINUSSY   {}
-           | NOTSY Expression                    {}
-           | ORDSY LPARENSY Expression RPARENSY  {}
-           | PREDSY LPARENSY Expression RPARENSY {}
+           | MINUSSY Expression %prec UMINUSSY   {$$ = uniCompare($2, "neg"); }
+           | NOTSY Expression                    {$$ = uniCompare($2, "not"); }
+           | ORDSY LPARENSY Expression RPARENSY  {$$ = uniCompare($3, "ord"); }
+           | PREDSY LPARENSY Expression RPARENSY {$$ = uniCompare($3, "pred"); }
            | STRINGSY                            {$$ = new Express(type_string, string_list.size()); string_list.push_back($1); }
-           | SUCCSY LPARENSY Expression RPARENSY {}
+           | SUCCSY LPARENSY Expression RPARENSY {$$ = uniCompare($3, "succ"); }
            ;
 
 FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}

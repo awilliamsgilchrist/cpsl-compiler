@@ -26,4 +26,5 @@ extern void outReadStatement(std::vector<std::string>*);
 extern void outAssignment(std::string, Express*);
 extern Express* boolCompare(Express*, Express*, std::string);
 extern Express* intCompare(Express*, Express*, std::string);
+extern Express* uniCompare(Express*, std::string);
 extern void outStopStatement();

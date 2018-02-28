@@ -427,6 +427,110 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	return nExpress;
 }
 
+Express* uniCompare(Express* expr, std::string kind)
+{
+	Express* nExpr;
+	
+	if(kind == "chr")
+	{
+		if(expr->type_ptr == type_int)
+		{
+			nExpr = new Express(type_char, expr->raw_val, expr->regist);
+		}
+		else
+		{
+			std::cerr << "Error: chr undefined for non-integer types" << std::endl;
+		}
+	}
+	else if(kind == "ord")
+	{
+		if(expr->type_ptr == type_char)
+		{
+			nExpr = new Express(type_int, expr->raw_val, expr->regist);
+		}
+		else
+		{
+			std::cerr << "Error: ord undefined for non-character types" << std::endl;
+		}
+	}
+	else if(kind == "neg" && expr->type_ptr == type_int)
+	{
+		nExpr = intCompare(expr, new Express(type_int, -1), "mult");
+	}
+	else if(kind == "not")
+	{
+		nExpr = boolCompare(expr, new Express(type_int, 0), "neq");
+	}
+	else if(kind == "pred")
+	{
+		std::string reg = getRegister();
+		if(expr->regist)
+		{
+			if(expr->type_ptr == type_int || expr->type_ptr == type_char)
+			{
+				out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+				out << "addi " << reg << ", " << reg << ", -1" << std::endl;
+				out << "sw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+				nExpr = expr;
+			}
+			else
+			{
+				nExpr = boolCompare(expr, new Express(type_bool, 0), "eq");
+			}
+		}
+		else
+		{
+			if(expr->type_ptr == type_bool && expr->raw_val == 0)
+			{
+				expr->raw_val += 1;
+			}
+			else
+			{
+				expr->raw_val -= 1;
+			}
+			
+			nExpr = expr;
+		}
+		
+		restoreRegister(reg);
+	}
+	else if(kind == "succ")
+	{
+		std::string reg = getRegister();
+		if(expr->regist)
+		{
+			if(expr->type_ptr == type_int || expr->type_ptr == type_char)
+			{
+				out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+				out << "addi " << reg << ", " << reg << ", 1" << std::endl;
+				out << "sw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+				nExpr = expr;
+			}
+			else
+			{
+				nExpr = boolCompare(expr, new Express(type_bool, 0), "eq");
+			}
+		}
+		else
+		{
+			if(expr->type_ptr == type_bool && expr->raw_val == 0)
+			{
+				expr->raw_val -= 1;
+			}
+			else
+			{
+				expr->raw_val += 1;
+			}
+			
+			nExpr = expr;
+		}
+		
+		restoreRegister(reg);
+	}
+	
+	return nExpr;
+}
+
 void outStopStatement()
 {
 	out << "j END" << std::endl;
