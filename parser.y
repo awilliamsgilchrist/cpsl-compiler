@@ -146,7 +146,7 @@ ConstDecls : ConstDecls ConstDecl
 					 | ConstDecl
 					 ;
 
-ConstDecl : IDENTSY EQSY Expression SCOLONSY {symbol_table.addExpr($1, $3);}
+ConstDecl : IDENTSY EQSY Expression SCOLONSY {symbol_table.addExpr(*$1, *$3);}
 					;
 
 PFDecls : PFDecls ProcedureDecl
