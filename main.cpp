@@ -56,6 +56,7 @@ void restoreRegister(std::string reg)
 
 void outBlock()
 {
+	out << "END: " << std::endl;
 	out << ".data\n";
 	for(std::string str : string_list)
 	{
@@ -424,6 +425,11 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	restoreRegister(reg1);
 	restoreRegister(reg2);
 	return nExpress;
+}
+
+void outStopStatement()
+{
+	out << "j END" << std::endl;
 }
 
 int main()

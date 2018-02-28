@@ -296,7 +296,7 @@ ToHead : TOSY Expression {}
        | DOWNTOSY Expression {}
        ;
 
-StopStatement : STOPSY {}
+StopStatement : STOPSY { outStopStatement(); }
               ;
 
 ReturnStatement : RETURNSY Expression {}
