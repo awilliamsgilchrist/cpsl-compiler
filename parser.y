@@ -203,7 +203,7 @@ TypeDecls    : TypeDecls TypeDecl
              | TypeDecl
              ;
 
-TypeDecl : IDENTSY EQSY Type SCOLONSY {}
+TypeDecl : IDENTSY EQSY Type SCOLONSY {symbol_table.addType($1, $3); }
          ;
 
 Type : SimpleType {$$ = $1; }
