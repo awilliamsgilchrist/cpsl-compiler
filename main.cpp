@@ -40,12 +40,18 @@ std::string getRegister()
 	}
 	else
 	{
-		return "";
+		std::string res = std::to_string(symbol_table.offset) + GLOBAL_PTR;
+		symbol_table.offset += 4;
+		return res;
 	}
 }
 
 void restoreRegister(std::string reg)
 {
+	if(reg.size() > 3)
+	{
+		return;
+	}
 	std::string nReg = "it";
 	nReg[0] = reg[1];
 	nReg[1] = reg[2];
