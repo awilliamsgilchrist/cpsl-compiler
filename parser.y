@@ -309,8 +309,8 @@ ReturnStatement : RETURNSY Expression {}
 ReadStatement : READSY LPARENSY ReadArgs RPARENSY { outReadStatement($3); }
               ;
 
-ReadArgs : ReadArgs COMMASY LValue {$1->push_back($3); $$ = $1; }
-         | LValue                  {$$ = new std::vector<std::string>(1, $1); }
+ReadArgs : ReadArgs COMMASY LValue {$1->push_back(*$3); $$ = $1; }
+         | LValue                  {$$ = new std::vector<std::string>(1, *$1); }
          ;
 
 WriteStatement : WRITESY LPARENSY WriteArgs RPARENSY {outWriteStatement($3);}
