@@ -347,7 +347,7 @@ Expression : CHARCONSTSY                         {$$ = new Express(type_char, $1
            | FunctionCall                        {}
            | INTSY                               {$$ = new Express(type_int, $1); }
            | LPARENSY Expression RPARENSY        {$$ = $2; }
-           | LValue                              {$$ = symbol_table.findExpr($1);}
+           | LValue                              {$$ = symbol_table.findExpr(*$1);}
            | MINUSSY Expression %prec UMINUSSY   {$$ = uniCompare($2, "neg"); }
            | NOTSY Expression                    {$$ = uniCompare($2, "not"); }
            | ORDSY LPARENSY Expression RPARENSY  {$$ = uniCompare($3, "ord"); }
