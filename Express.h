@@ -10,8 +10,8 @@ class Express {
 		Type* type_ptr;
 		int raw_val;
 		bool regist;
-		Expr* ref_expr;
-		Expr* arr_expr;
+		Express* ref_expr;
+		Express* arr_expr;
 
 		Express(Type* type_ptr, int raw_val, bool regist = false):
 			type_ptr(type_ptr),
