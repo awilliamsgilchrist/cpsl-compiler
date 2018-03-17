@@ -355,7 +355,7 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 	{
 		std::string refReg = outRefReg(expr2, true);
 		
-		out << "lw " << reg12<< ", 0(" << refReg << ")" << std::endl;
+		out << "lw " << reg2<< ", 0(" << refReg << ")" << std::endl;
 		
 		restoreRegister(refReg);
 	}
@@ -501,7 +501,7 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	{
 		std::string refReg = outRefReg(expr2, true);
 		
-		out << "lw " << reg12<< ", 0(" << refReg << ")" << std::endl;
+		out << "lw " << reg2<< ", 0(" << refReg << ")" << std::endl;
 		
 		restoreRegister(refReg);
 	}
