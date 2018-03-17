@@ -257,7 +257,7 @@ Statement : Assignment {}
           | {}
           ;
 
-Assignment : LValue ASSIGNSY Expression { outAssignment($1, $3); }
+Assignment : LValue ASSIGNSY Expression { outAssignment(*$1, $3); }
            ;
 
 IfStatement : IfHead ThenPart ElseIfList ElseClause ENDSY {}
