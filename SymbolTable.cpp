@@ -25,10 +25,10 @@ void SymbolTable::addExpr(std::string key, Express expr)
 	
 	if(expr.type_ptr->usd_type == "array")
 	{
-		for(unsigned int i = 0; i < expr.type->size; i++)
+		for(unsigned int i = 0; i < expr.type_ptr->size; i++)
 		{
-			Express subExpr(expr.type->simple_type, this.offset, true);
-			subExpr.arr_exp = &expr;
+			Express subExpr(expr.type_ptr->simple_type, this.offset, true);
+			subExpr.arr_expr = &expr;
 			
 			if(subExpr.type_ptr->usd_type == "array")
 			{
