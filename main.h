@@ -5,10 +5,10 @@
 #include"Express.h"
 #include"SymbolTable.h"
 
-extern int* type_int;
-extern int* type_bool;
-extern int* type_char;
-extern int* type_string;
+extern Type* type_int;
+extern Type* type_bool;
+extern Type* type_char;
+extern Type* type_string;
 
 const std::string GLOBAL_PTR = "($gp)";
 extern std::string label_auto();

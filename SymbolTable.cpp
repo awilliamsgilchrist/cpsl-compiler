@@ -12,7 +12,7 @@ void SymbolTable::stepOutContext()
 	exprMap.pop();
 }
 
-void SymbolTable::addType(std::string key, int* type_ptr)
+void SymbolTable::addType(std::string key, Type* type_ptr)
 {
 	typeMap.top().emplace(key, type_ptr);
 }
@@ -22,9 +22,9 @@ void SymbolTable::addExpr(std::string key, Express expr)
 	exprMap.top().emplace(key, expr);
 }
 
-int* SymbolTable::findType(std::string key)
+Type* SymbolTable::findType(std::string key)
 {
-	std::stack<std::map<std::string, int*>> checkTable(typeMap);
+	std::stack<std::map<std::string, Type*>> checkTable(typeMap);
 	
 	while(checkTable.size() > 0)
 	{

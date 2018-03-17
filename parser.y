@@ -18,7 +18,7 @@ void yyerror(const char*);
   Express* expr_val;
   std::vector<std::string>* vect_str;
   std::vector<Express*>* vect_expr;
-  int* type_val;
+  Type* type_val;
 }
 
 %error-verbose

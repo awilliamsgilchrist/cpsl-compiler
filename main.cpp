@@ -1,10 +1,10 @@
 #include"main.h"
 extern int yyparse();
 
-int* type_int = new int(5);
-int* type_bool = new int(5);
-int* type_char = new int(5);
-int* type_string = new int(5);
+Type* type_int = new Type();
+Type* type_bool = new Type();
+Type* type_char = new Type();
+Type* type_string = new Type();
 
 int auto_counter = 0;
 
