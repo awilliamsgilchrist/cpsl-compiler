@@ -358,7 +358,7 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
              ;
 
 LValue : LValue DOTSY IDENTSY {}
-       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = $1 + std::to_string($3->raw_val); } else { $$ = arLvalHelper($3, $1); }}
+       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = $1 + std::to_string($3->raw_val); } else { $$ = symbol_table->addExpr(arLvalHelper($3, $1)); }}
        | IDENTSY {$$ = $1;}
        ;
 %%
