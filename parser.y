@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <cstring>
+#include <string>
 
 #include"../main.h"
 #include"../Express.h"
@@ -13,7 +13,8 @@ void yyerror(const char*);
 
 %union
 {
-  const char* str_val;
+  const char* cstr_val;
+  std::string* str_val;
   int int_val;
   char char_val;
   Express* expr_val;
@@ -130,8 +131,8 @@ void yyerror(const char*);
 %type <int_val> WhileStatement 
 %type <vect_expr> WriteArgs 
 %type <int_val> WriteStatement  
-%type <str_val> IDENTSY 
-%type <str_val> STRINGSY 
+%type <cstr_val> IDENTSY 
+%type <cstr_val> STRINGSY 
 
 %%
 Program : ProgramHead Block DOTSY {}
@@ -359,8 +360,8 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
              ;
 
 LValue : LValue DOTSY IDENTSY {}
-       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = strcat($1, ("[" + std::to_string($3->raw_val) + "]").c_str()); } else { std::string temp = name_ref(); symbol_table.addExpr(temp, arLvalHelper($3, $1)); $$ = temp.c_str(); }}
-       | IDENTSY {$$ = $1;}
+       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = $1 + "[" + std::to_string($3->raw_val) + "]"; } else { std::string temp = name_ref(); symbol_table.addExpr(temp, arLvalHelper($3, $1)); $$ = temp; }}
+       | IDENTSY {$$ = new std::string($1);}
        ;
 %%
 
