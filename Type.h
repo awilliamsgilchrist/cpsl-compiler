@@ -27,8 +27,8 @@ class Type{
 			indexing_map.emplace(std::to_string(min + i), i);
 		}
 		
-		size = (max - min);
-		data = new int[max - min];
+		size = (max - min) + 1;
+		data = new int[size];
 		
 	}
 };
