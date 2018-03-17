@@ -7,7 +7,7 @@ Type* type_char = new Type();
 Type* type_string = new Type();
 
 int auto_counter = 0;
-int ref_couter = 0;
+int ref_counter = 0;
 
 std::string label_auto()
 {
