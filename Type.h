@@ -8,6 +8,7 @@ class Type{
 	std::string usd_type;
 	std::map<std::string, int> indexing_map;
 	int size;
+	int min;
 	int* data;
 	
 	Type():
@@ -20,6 +21,7 @@ class Type{
 	//For arrays
 	Type(Type* simple_type, int min, int max):
 		simple_type(simple_type),
+		min(min),
 		usd_type("array")
 	{
 		for(unsigned int i = 0; i < max - min; i++)
