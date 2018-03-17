@@ -23,18 +23,18 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 {
 	exprMap.top().emplace(key, expr);
 	
-	if(expr.type_ptr->usd_type == "array")
+	if(expr->type_ptr->usd_type == "array")
 	{
-		for(unsigned int i = 0; i < expr.type_ptr->size; i++)
+		for(unsigned int i = 0; i < expr->type_ptr->size; i++)
 		{
 			Express* subExpr = new Express(expr->type_ptr->simple_type, this->offset, true);
 			subExpr->arr_expr = expr;
 			
-			if(subExpr.type_ptr->usd_type == "array")
+			if(subExpr->type_ptr->usd_type == "array")
 			{
 				this->addExpr(key + "[" + std::to_string(i) + "]", subExpr);
 			}
-			else if(subExpr.type_ptr == m_string_type)
+			else if(subExpr->type_ptr == m_string_type)
 			{
 				subExpr->raw_val = 0;
 				subExpr->regist = false;
