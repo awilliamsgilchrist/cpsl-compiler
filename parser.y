@@ -358,7 +358,7 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
              ;
 
 LValue : LValue DOTSY IDENTSY {}
-       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = ($1 + std::to_string($3->raw_val)).c_str(); } else { $$ = symbol_table.addExpr(name_ref(), *arLvalHelper($3, $1)); }}
+       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = ($1 + std::to_string($3->raw_val)).c_str(); } else { std::string temp = name_ref(); symbol_table.addExpr(temp, *arLvalHelper($3, $1)); $$ = symbol_table.findExpr(temp); }}
        | IDENTSY {$$ = $1;}
        ;
 %%
