@@ -21,8 +21,7 @@ std::string name_ref()
 	return "ref_expr" + std::to_string(ref_counter);
 }
 
-SymbolTable symbol_table();
-symbol_table.setStrType(type_string);
+SymbolTable symbol_table;
 std::vector<std::string> string_list;
 std::stack<std::string> register_pool;
 
@@ -701,6 +700,8 @@ int main()
 	symbol_table.addExpr("TRUE", *(new Express(type_bool, 1)));
 	symbol_table.addExpr("false", *(new Express(type_bool, 0)));
 	symbol_table.addExpr("FALSE", *(new Express(type_bool, 0)));
+	
+	symbol_table.setStrType(type_string);
 	
 	string_list.push_back("");
 	symbol_table.stepInContext();
