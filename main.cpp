@@ -697,10 +697,10 @@ int main()
 	symbol_table.addType("string", type_string);
 	symbol_table.addType("STRING", type_string);
 	
-	symbol_table.addExpr("true", *(new Express(type_bool, 1)));
-	symbol_table.addExpr("TRUE", *(new Express(type_bool, 1)));
-	symbol_table.addExpr("false", *(new Express(type_bool, 0)));
-	symbol_table.addExpr("FALSE", *(new Express(type_bool, 0)));
+	symbol_table.addExpr("true", (new Express(type_bool, 1)));
+	symbol_table.addExpr("TRUE", (new Express(type_bool, 1)));
+	symbol_table.addExpr("false", (new Express(type_bool, 0)));
+	symbol_table.addExpr("FALSE", (new Express(type_bool, 0)));
 	
 	symbol_table.setStrType(type_string);
 	
