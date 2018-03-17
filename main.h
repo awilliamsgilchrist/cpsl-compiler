@@ -20,6 +20,8 @@ extern std::stack<std::string> register_pool;
 
 extern std::string getStringListIdentifier(std::string str);
 
+extern Express* arLvalHelper(Express*, std::string);
+extern std::string outRefReg(Express*, bool, std::string);
 extern void outBlock();
 extern void outWriteStatement(std::vector<Express*>*);
 extern void outReadStatement(std::vector<std::string>*);

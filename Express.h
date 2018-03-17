@@ -10,11 +10,15 @@ class Express {
 		Type* type_ptr;
 		int raw_val;
 		bool regist;
+		Expr* ref_expr;
+		Expr* arr_expr;
 
 		Express(Type* type_ptr, int raw_val, bool regist = false):
 			type_ptr(type_ptr),
 			raw_val(raw_val),
-			regist(regist)
+			regist(regist),
+			ref_expr(nullptr),
+			arr_expr(nullptr)
 		{}
 };
 

@@ -87,7 +87,7 @@ void yyerror(const char*);
 
 %type <char_val> CHARCONSTSY
 %type <int_val> Arguments 
-%type <int_val> ArrayType 
+%type <type_val> ArrayType 
 %type <int_val> Assignment
 %type <int_val> Block 
 %type <int_val> Body  
@@ -208,7 +208,7 @@ TypeDecl : IDENTSY EQSY Type SCOLONSY {symbol_table.addType($1, $3); }
 
 Type : SimpleType {$$ = $1; }
      | RecordType {}
-     | ArrayType {}
+     | ArrayType {$$ = $1; }
      ;
 
 SimpleType : IDENTSY {$$ = symbol_table.findType($1); }
@@ -228,7 +228,7 @@ IdentList : IdentList COMMASY IDENTSY {$1->push_back($3); $$ = $1;}
           | IDENTSY {$$ = new std::vector<std::string>(1, $1);}
           ;
 
-ArrayType : ARRAYSY LBRACKETSY Expression COLONSY Expression RBRACKETSY OFSY Type {}
+ArrayType : ARRAYSY LBRACKETSY Expression COLONSY Expression RBRACKETSY OFSY Type {$$ = new Type($8, $3->raw_val, $5->raw_val); }
           ;
 
 OptVarDecls : VARSY VarDecls
@@ -358,7 +358,7 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
              ;
 
 LValue : LValue DOTSY IDENTSY {}
-       | LValue LBRACKETSY Expression RBRACKETSY {}
+       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = $1 + std::to_string($3->raw_val); } else { $$ = arLvalHelper($3, $1); }}
        | IDENTSY {$$ = $1;}
        ;
 %%

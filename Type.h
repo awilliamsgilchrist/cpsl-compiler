@@ -14,7 +14,7 @@ class Type{
 		simple_type(nullptr),
 		usd_type(""),
 		data(nullptr),
-		size(4)
+		size(1)
 	{}
 	
 	//For arrays
@@ -27,7 +27,7 @@ class Type{
 			indexing_map.emplace(std::to_string(min + i), i);
 		}
 		
-		size = (max - min) * 4;
+		size = (max - min);
 		data = new int[max - min];
 		
 	}

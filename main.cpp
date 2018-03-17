@@ -58,7 +58,45 @@ void restoreRegister(std::string reg)
 	register_pool.push(nReg);
 }
 
+Express* arLvalHelper(Express* refExpr, std::string arr)
+{
+	Express* nExpr = new Express(refExpr->type_ptr, -10, true);
+	nExpr->arr_expr = symbol_table.findExpr(arr);
+	nExpr->ref_expr = refExpr;
+	return nExpr;
+}
+
 //Here follow the code generation functions
+
+//This gets a register containing the address where the content of an unknowable reference is stored
+//NOTE: Does not free its register. Must be manually freed after calling
+std::string outRefReg(Express* expr, bool isFirstCall, std::string reg = "")
+{
+	if(reg == "")
+	{
+		reg = getRegister();
+	}
+	
+	if(!expr->ref_expr)
+	{
+		out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
+	}
+	else
+	{
+		reg = outRefReg(expr->ref_expr, false, reg);
+		out << "sll " << reg << ", " << reg << ", 2" << std::endl;
+		out << "addi " << reg << ", " << reg << ", " << expr->ref_expr->arr_expr->raw_val << std::endl;
+		out << "add " << reg << ", $gp, " << reg << std::endl;
+		
+		if(!isFirstCall)
+		{
+			out << "lw " << reg << ", " << reg << std::endl;
+		}
+	}
+	
+	
+	return reg;
+}
 
 void outBlock()
 {
