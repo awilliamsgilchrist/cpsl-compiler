@@ -13,7 +13,7 @@ void yyerror(const char*);
 
 %union
 {
-  char* str_val;
+  const char* str_val;
   int int_val;
   char char_val;
   Express* expr_val;
