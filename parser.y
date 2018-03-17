@@ -225,7 +225,7 @@ FieldDecl : IdentList COLONSY Type SCOLONSY {}
           ;
 
 IdentList : IdentList COMMASY IDENTSY {$1->push_back($3); $$ = $1;}
-          | IDENTSY {std::cout << $1 << std::endl; $$ = new std::vector<std::string>(1, $1);}
+          | IDENTSY { $$ = new std::vector<std::string>(1, $1);}
           ;
 
 ArrayType : ARRAYSY LBRACKETSY Expression COLONSY Expression RBRACKETSY OFSY Type {$$ = new Type($8, $3->raw_val, $5->raw_val); }

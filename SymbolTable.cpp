@@ -53,6 +53,8 @@ Type* SymbolTable::findType(std::string key)
 {
 	std::stack<std::map<std::string, Type*>> checkTable(typeMap);
 	
+	std::cout << key << std::endl;
+	
 	while(checkTable.size() > 0)
 	{
 		try
