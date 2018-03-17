@@ -219,7 +219,7 @@ void outReadStatement(std::vector<std::string>* vect)
 		}
 		
 		symbol_table.removeExpr(vect->at(i));
-		symbol_table.addExpr(vect->at(i), *expr);
+		symbol_table.addExpr(vect->at(i), expr);
 	}
 }
 
@@ -238,7 +238,7 @@ void outAssignment(std::string str, Express* expr)
 			oldExpr->regist = true;
 			symbol_table.offset += 4;
 			symbol_table.removeExpr(str);
-			symbol_table.addExpr(str, *oldExpr);
+			symbol_table.addExpr(str, oldExpr);
 		}
 		else
 		{
@@ -275,7 +275,7 @@ void outAssignment(std::string str, Express* expr)
 		}
 		
 		symbol_table.removeExpr(str);
-		symbol_table.addExpr(str, *oldExpr);
+		symbol_table.addExpr(str, oldExpr);
 	}
 	else 
 	{

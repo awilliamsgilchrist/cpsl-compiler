@@ -9,7 +9,7 @@
 class SymbolTable {
 	public:
 		std::stack<std::map<std::string, Type*>> typeMap;
-		std::stack<std::map<std::string, Express>> exprMap;
+		std::stack<std::map<std::string, Express*>> exprMap;
 		int offset;
 		int typeCount;
 		int exprCount;
@@ -26,7 +26,7 @@ class SymbolTable {
 		void stepInContext();
 		void stepOutContext();
 		void addType(std::string key, Type* type_ptr);
-		void addExpr(std::string key, Express expr);
+		void addExpr(std::string key, Express expr*);
 		Type* findType(std::string key);
 		Express* findExpr(std::string key);
 		void removeType(std::string key);

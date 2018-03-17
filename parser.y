@@ -146,7 +146,7 @@ ConstDecls : ConstDecls ConstDecl
 					 | ConstDecl
 					 ;
 
-ConstDecl : IDENTSY EQSY Expression SCOLONSY {symbol_table.addExpr($1, *$3);}
+ConstDecl : IDENTSY EQSY Expression SCOLONSY {symbol_table.addExpr($1, $3);}
 					;
 
 PFDecls : PFDecls ProcedureDecl
@@ -239,7 +239,7 @@ VarDecls    : VarDecls VarDecl
             | VarDecl
             ;
 
-VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < $1->size(); i++){ Express a($3, 0); symbol_table.addExpr($1->at(i), a);} }
+VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < $1->size(); i++){ symbol_table.addExpr($1->at(i), new Express($3, 0));} }
         ;
 
 Statement : Assignment {}
@@ -358,7 +358,7 @@ FunctionCall : IDENTSY LPARENSY OptArguments RPARENSY {}
              ;
 
 LValue : LValue DOTSY IDENTSY {}
-       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = ($1 + std::to_string($3->raw_val)).c_str(); } else { std::string temp = name_ref(); symbol_table.addExpr(temp, *arLvalHelper($3, $1)); $$ = temp.c_str(); }}
+       | LValue LBRACKETSY Expression RBRACKETSY {if(!$3->regist){ $$ = ($1 + std::to_string($3->raw_val)).c_str(); } else { std::string temp = name_ref(); symbol_table.addExpr(temp, arLvalHelper($3, $1)); $$ = temp.c_str(); }}
        | IDENTSY {$$ = $1;}
        ;
 %%
