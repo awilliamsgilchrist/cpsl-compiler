@@ -22,6 +22,7 @@ std::string name_ref()
 }
 
 SymbolTable symbol_table;
+symbol_table.setStrType(type_string);
 std::vector<std::string> string_list;
 std::stack<std::string> register_pool;
 

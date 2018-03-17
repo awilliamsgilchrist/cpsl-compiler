@@ -1,7 +1,5 @@
 #include "SymbolTable.h"
 
-extern Type* string_type;
-
 void SymbolTable::stepInContext()
 {
 	typeMap.emplace();
@@ -36,7 +34,7 @@ void SymbolTable::addExpr(std::string key, Express expr)
 			{
 				this->addExpr(key + "[" + std::to_string(i) + "]", subExpr);
 			}
-			else if(subExpr.type_ptr == string_type)
+			else if(subExpr.type_ptr == m_string_type)
 			{
 				subExpr.raw_val = 0;
 				subExpr.regist = false;

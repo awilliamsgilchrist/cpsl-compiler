@@ -31,6 +31,11 @@ class SymbolTable {
 		Express* findExpr(std::string key);
 		void removeType(std::string key);
 		void removeExpr(std::string key);
+		
+		void setStrType(Type* string_type) { m_string_type = string_type; }
+		
+	private:
+		Type* m_string_type;
 };
 
 #endif
