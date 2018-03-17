@@ -1,5 +1,7 @@
 #include "SymbolTable.h"
 
+extern Type* string_type;
+
 void SymbolTable::stepInContext()
 {
 	typeMap.emplace();
