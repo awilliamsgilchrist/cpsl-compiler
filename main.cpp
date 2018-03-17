@@ -21,7 +21,7 @@ std::string name_ref()
 	return "ref_expr" + std::to_string(ref_counter);
 }
 
-SymbolTable symbol_table;
+SymbolTable symbol_table();
 symbol_table.setStrType(type_string);
 std::vector<std::string> string_list;
 std::stack<std::string> register_pool;
