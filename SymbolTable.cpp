@@ -53,8 +53,6 @@ Type* SymbolTable::findType(std::string key)
 {
 	std::stack<std::map<std::string, Type*>> checkTable(typeMap);
 	
-	std::cout << key << std::endl;
-	
 	while(checkTable.size() > 0)
 	{
 		try
@@ -73,6 +71,8 @@ Type* SymbolTable::findType(std::string key)
 Express* SymbolTable::findExpr(std::string key)
 {
 	std::stack<std::map<std::string, Express*>> checkTable(exprMap);
+	
+	std::cout << key << std::endl;
 	
 	while(checkTable.size() > 0)
 	{
