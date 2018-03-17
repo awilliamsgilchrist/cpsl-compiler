@@ -18,7 +18,7 @@ void SymbolTable::addType(std::string key, Type* type_ptr)
 }
 
 
-//If there are weird, ienxplicable things happening, check here first
+//If there are weird, inexplicable things happening, check here first
 void SymbolTable::addExpr(std::string key, Express expr)
 {
 	exprMap.top().emplace(key, expr);
@@ -33,6 +33,12 @@ void SymbolTable::addExpr(std::string key, Express expr)
 			if(subExpr.type_ptr->usd_type == "array")
 			{
 				this->addExpr(key + "[" + std::to_string(i) + "]", subExpr);
+			}
+			else if(subExpr.type_ptr == string_type)
+			{
+				subExpr.raw_val = 0;
+				subExpr.regist = false;
+				exprMap.top().emplace(key + "[" + std::to_string(i) + "]", subExpr);
 			}
 			else
 			{

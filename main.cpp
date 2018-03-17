@@ -121,35 +121,56 @@ void outWriteStatement(std::vector<Express*>* vect)
 {
 	for(unsigned int i = 0; i < vect->size(); i++)
 	{
-		if(vect->at(i)->type_ptr == type_string)
+		if(vect->at(i)->ref_expr)
 		{
-			out << "li $v0, 4" << std::endl;
-			out << "la $a0, STR" << vect->at(i)->raw_val << std::endl;
-		}
-		else if(vect->at(i)->type_ptr == type_char)
-		{
-			out << "li $v0, 11" << std::endl;
-			if(vect->at(i)->regist)
+			std::string reg = outRefReg(vect->at(i), true);
+			
+			if(vect->at(i)->type_ptr == type_char)
 			{
-				out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
+				out << "li $v0, 11" << std::endl;
 			}
 			else
 			{
-				out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+				out << "li $v0, 1" << std::endl;
 			}
+			
+			out << "lw $a0, (" << reg << ")" << std::endl;
+			
+			restoreRegister(reg);
 		}
 		else
 		{
-			out << "li $v0, 1" << std::endl;
-			if(vect->at(i)->regist)
+			if(vect->at(i)->type_ptr == type_string)
 			{
-				out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
+				out << "li $v0, 4" << std::endl;
+				out << "la $a0, STR" << vect->at(i)->raw_val << std::endl;
+			}
+			else if(vect->at(i)->type_ptr == type_char)
+			{
+				out << "li $v0, 11" << std::endl;
+				if(vect->at(i)->regist)
+				{
+					out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
+				}
+				else
+				{
+					out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+				}
 			}
 			else
 			{
-				out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+				out << "li $v0, 1" << std::endl;
+				if(vect->at(i)->regist)
+				{
+					out << "lw $a0, " << vect->at(i)->raw_val << GLOBAL_PTR << std::endl;
+				}
+				else
+				{
+					out << "li $a0, " << vect->at(i)->raw_val << std::endl;
+				}
 			}
 		}
+		
 		
 		out << "syscall" << std::endl;
 	}
@@ -176,7 +197,15 @@ void outReadStatement(std::vector<std::string>* vect)
 		
 		out << "syscall" << std::endl;
 		
-		if(expr->regist)
+		if(expr->ref_expr)
+		{
+			std::string reg = outRefReg(expr, true);
+			
+			out << "sw $v0, 0(" << reg << ")" << std::endl;
+			
+			restoreRegister(reg);
+		}
+		else if(expr->regist)
 		{
 			out << "sw $v0, " << expr->raw_val << GLOBAL_PTR << std::endl;
 		}
@@ -217,11 +246,22 @@ void outAssignment(std::string str, Express* expr)
 	}
 	else if(expr->type_ptr == oldExpr->type_ptr)
 	{
-		
 		if(oldExpr->regist)
 		{
 			out << "lw " << reg << ", " << expr->raw_val << GLOBAL_PTR << std::endl;
-			out << "sw " << reg << oldExpr->raw_val << GLOBAL_PTR << std::endl;
+			
+			if(oldExpr->ref_expr)
+			{
+				std::string refReg = outRefReg(oldExpr, true);
+				
+				out << "sw " << reg << ", 0(" << refReg << ")" << std::endl;
+				
+				restoreRegister(refReg);
+			}
+			else
+			{
+				out << "sw " << reg << oldExpr->raw_val << GLOBAL_PTR << std::endl;
+			}
 		}
 		else
 		{
@@ -295,7 +335,15 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 		return nExpress;
 	}
 	
-	if(expr1->regist)
+	if(expr1->ref_expr)
+	{
+		std::string refReg = outRefReg(expr1, true);
+		
+		out << "lw " << reg1 << ", 0(" << refReg << ")" << std::endl;
+		
+		restoreRegister(refReg);
+	}
+	else if(expr1->regist)
 	{
 		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
 	}
@@ -303,7 +351,15 @@ Express* boolCompare(Express* expr1, Express* expr2, std::string kind)
 	{
 		out << "li " << reg1 << ", " << expr1->raw_val << std::endl;
 	}
-	if(expr2->regist)
+	if(expr2->ref_expr)
+	{
+		std::string refReg = outRefReg(expr2, true);
+		
+		out << "lw " << reg12<< ", 0(" << refReg << ")" << std::endl;
+		
+		restoreRegister(refReg);
+	}
+	else if(expr2->regist)
 	{
 		out << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
 	}
@@ -425,8 +481,15 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	std::string reg2 = getRegister();
 	std::string label = label_auto();
 	
-	
-	if(expr1->regist)
+	if(expr1->ref_expr)
+	{
+		std::string refReg = outRefReg(expr1, true);
+		
+		out << "lw " << reg1 << ", 0(" << refReg << ")" << std::endl;
+		
+		restoreRegister(refReg);
+	}
+	else if(expr1->regist)
 	{
 		out << "lw " << reg1 << ", " << expr1->raw_val << GLOBAL_PTR << std::endl;
 	}
@@ -434,7 +497,15 @@ Express* intCompare(Express* expr1, Express* expr2, std::string kind)
 	{
 		out << "li " << reg1 << ", " << expr1->raw_val << std::endl;
 	}
-	if(expr2->regist)
+	if(expr2->ref_expr)
+	{
+		std::string refReg = outRefReg(expr2, true);
+		
+		out << "lw " << reg12<< ", 0(" << refReg << ")" << std::endl;
+		
+		restoreRegister(refReg);
+	}
+	else if(expr2->regist)
 	{
 		out << "lw " << reg2 << ", " << expr2->raw_val << GLOBAL_PTR << std::endl;
 	}
