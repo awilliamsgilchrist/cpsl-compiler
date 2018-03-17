@@ -7,11 +7,18 @@ Type* type_char = new Type();
 Type* type_string = new Type();
 
 int auto_counter = 0;
+int ref_couter = 0;
 
 std::string label_auto()
 {
 	auto_counter++;
 	return "a" + std::to_string(auto_counter);
+}
+
+std::string name_ref()
+{
+	ref_counter++;
+	return "ref_expr" + std::to_string(ref_counter);
 }
 
 SymbolTable symbol_table;

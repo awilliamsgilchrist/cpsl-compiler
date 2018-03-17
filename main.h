@@ -12,6 +12,7 @@ extern Type* type_string;
 
 const std::string GLOBAL_PTR = "($gp)";
 extern std::string label_auto();
+extern std::string name_ref();
 
 extern SymbolTable symbol_table;
 extern std::vector<std::string> string_list;
