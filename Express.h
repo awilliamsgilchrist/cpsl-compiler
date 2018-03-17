@@ -3,6 +3,8 @@
 #include<string>
 #include<iostream>
 
+#include"Type.h"
+
 class Express {
 	public:
 		int* type_ptr;

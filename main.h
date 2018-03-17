@@ -9,10 +9,6 @@ extern int* type_int;
 extern int* type_bool;
 extern int* type_char;
 extern int* type_string;
-extern int* type_array_int;
-extern int* type_array_bool;
-extern int* type_array_char;
-extern int* type_array_string;
 
 const std::string GLOBAL_PTR = "($gp)";
 extern std::string label_auto();
