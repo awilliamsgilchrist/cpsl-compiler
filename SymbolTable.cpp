@@ -27,16 +27,16 @@ void SymbolTable::addExpr(std::string key, Express expr)
 	{
 		for(unsigned int i = 0; i < expr.type_ptr->size; i++)
 		{
-			Express subExpr(expr.type_ptr->simple_type, this.offset, true);
+			Express subExpr(expr.type_ptr->simple_type, this->offset, true);
 			subExpr.arr_expr = &expr;
 			
 			if(subExpr.type_ptr->usd_type == "array")
 			{
-				this.addExpr(key + "[" + std::to_string(i) + "]", subExpr);
+				this->addExpr(key + "[" + std::to_string(i) + "]", subExpr);
 			}
 			else
 			{
-				this.offset += 4;
+				this->offset += 4;
 				exprMap.top().emplace(key + "[" + std::to_string(i) + "]", subExpr);
 			}
 		}
