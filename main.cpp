@@ -70,7 +70,8 @@ Express* arLvalHelper(Express* refExpr, std::string arr)
 	Express* nExpr = new Express(refExpr->type_ptr, -10, true);
 	nExpr->arr_expr = symbol_table.findExpr(arr);
 	nExpr->ref_expr = refExpr;
-	std::cout << nExpr->ref_expr << std::endl << refExpr << std::endl;
+	std::cout << nExpr << std::endl;
+	std::cout << nExpr->ref_expr << std::endl;
 	return nExpr;
 }
 
@@ -230,6 +231,9 @@ void outAssignment(std::string str, Express* expr)
 	std::cout << str << std::endl;
 	
 	Express* oldExpr = symbol_table.findExpr(str);
+	
+	std::cout << oldExpr << std::endl << oldExpr->ref_expr << std::endl;
+	
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr && !expr->regist)
 	{
