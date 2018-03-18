@@ -222,8 +222,8 @@ void outReadStatement(std::vector<std::string>* vect)
 			symbol_table.offset += 4;
 		}
 		
-		symbol_table.removeExpr(vect->at(i));
-		symbol_table.addExpr(vect->at(i), expr);
+		//symbol_table.removeExpr(vect->at(i));
+		//symbol_table.addExpr(vect->at(i), expr);
 	}
 }
 
