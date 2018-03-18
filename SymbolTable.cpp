@@ -32,6 +32,7 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 		for(unsigned int i = 0; i < expr->type_ptr->size; i++)
 		{
 			Express* subExpr = new Express(expr->type_ptr->simple_type, this->offset, true);
+			std::cout << subExpr->raw_val;
 			subExpr->arr_expr = expr;
 			
 			if(subExpr->type_ptr->usd_type == "array")
