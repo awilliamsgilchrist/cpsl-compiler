@@ -243,11 +243,11 @@ void outAssignment(std::string str, Express* expr)
 		if(expr->type_ptr != type_string)
 		{
 			out << "li " << reg << ", " << expr->raw_val << std::endl;
-			out << "sw " << reg << ", " << symbol_table.offset << GLOBAL_PTR << std::endl;
+			out << "sw " << reg << ", " << oldExpr->raw_val << GLOBAL_PTR << std::endl;
 			
-			oldExpr->raw_val = symbol_table.offset;
-			oldExpr->regist = true;
-			symbol_table.offset += 4;
+			//oldExpr->raw_val = symbol_table.offset;
+			//oldExpr->regist = true;
+			//symbol_table.offset += 4;
 			//symbol_table.removeExpr(str);
 			//symbol_table.addExpr(str, oldExpr);
 		}
