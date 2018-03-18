@@ -97,7 +97,7 @@ std::string outRefReg(Express* expr, bool isFirstCall, std::string reg = "")
 		out << "sll " << reg << ", " << reg << ", 2" << std::endl;
 		std::cout << expr->ref_expr << std::endl;
 		std::cout << expr->ref_expr->arr_expr << std::endl;
-		out << "addi " << reg << ", " << reg << ", " << expr->ref_expr->raw_val << std::endl;
+		//out << "addi " << reg << ", " << reg << ", " << expr->ref_expr->raw_val << std::endl;
 		out << "add " << reg << ", $gp, " << reg << std::endl;
 		
 		if(!isFirstCall)
