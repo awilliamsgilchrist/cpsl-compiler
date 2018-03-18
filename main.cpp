@@ -79,6 +79,7 @@ Express* arLvalHelper(Express* refExpr, std::string arr)
 //NOTE: Does not free its register. Must be manually freed after calling
 std::string outRefReg(Express* expr, bool isFirstCall, std::string reg = "")
 {
+	std::cout << "This is getting called" << std::endl;
 	if(reg == "")
 	{
 		reg = getRegister();
@@ -261,7 +262,7 @@ void outAssignment(std::string str, Express* expr)
 			}
 			else
 			{
-				out << "sw " << reg << oldExpr->raw_val << GLOBAL_PTR << std::endl;
+				out << "sw " << reg << ", " << oldExpr->raw_val << GLOBAL_PTR << std::endl;
 			}
 		}
 		else
