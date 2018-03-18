@@ -81,7 +81,7 @@ Express* SymbolTable::findExpr(std::string key)
 	{
 		try
 		{
-			return new Express(checkTable.top().at(key)->type_ptr, checkTable.top().at(key)->raw_val, checkTable.top().at(key)->regist);
+			return checkTable.top().at(key);
 		}
 		catch(const std::out_of_range& oor)
 		{
