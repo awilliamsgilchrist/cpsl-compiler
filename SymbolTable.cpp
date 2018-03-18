@@ -52,8 +52,9 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 			}
 		}
 	}
-	else 
+	else if(expr->raw_val = -20 && expr->regist)
 	{
+		expr->raw_val = this->offset;
 		this->offset += 4;
 	}
 }
