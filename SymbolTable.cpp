@@ -52,6 +52,10 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 			}
 		}
 	}
+	else 
+	{
+		this->offset += 4;
+	}
 }
 
 Type* SymbolTable::findType(std::string key)

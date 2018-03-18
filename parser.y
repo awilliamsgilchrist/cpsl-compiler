@@ -241,7 +241,7 @@ VarDecls    : VarDecls VarDecl
             | VarDecl
             ;
 
-VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < $1->size(); i++){ symbol_table.addExpr($1->at(i), new Express($3, 0));} }
+VarDecl : IdentList COLONSY Type SCOLONSY {for(unsigned int i = 0; i < $1->size(); i++){ symbol_table.addExpr($1->at(i), new Express($3, symbol_table.offset, true));} }
         ;
 
 Statement : Assignment {}
