@@ -228,11 +228,13 @@ void outReadStatement(std::vector<std::string>* vect)
 
 void outAssignment(std::string str, Express* expr)
 {
-	std::cout << str << std::endl;
+	std::cout << "Key: " << str << std::endl;
 	
 	Express* oldExpr = symbol_table.findExpr(str);
 	
-	std::cout << oldExpr << std::endl << oldExpr->ref_expr << std::endl << expr << std::endl;
+	std::cout << "OldExpr: " << oldExpr << std::endl;
+	std::cout << "RefExpr: " << oldExpr->ref_expr << std::endl; 
+	std::cout << "Expr: " << expr << std::endl;
 	
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr && !expr->regist)
