@@ -232,7 +232,7 @@ void outAssignment(std::string str, Express* expr)
 	
 	Express* oldExpr = symbol_table.findExpr(str);
 	
-	std::cout << oldExpr << std::endl << oldExpr->ref_expr << std::endl;
+	std::cout << oldExpr << std::endl << oldExpr->ref_expr << std::endl << std::cout <<expr;
 	
 	std::string reg = getRegister();
 	if(expr->type_ptr == oldExpr->type_ptr && !expr->regist)
