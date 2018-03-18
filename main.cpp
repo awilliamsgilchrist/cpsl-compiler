@@ -284,8 +284,8 @@ void outAssignment(std::string str, Express* expr)
 			symbol_table.offset += 4;
 		}
 		
-		symbol_table.removeExpr(str);
-		symbol_table.addExpr(str, oldExpr);
+		//symbol_table.removeExpr(str);
+		//symbol_table.addExpr(str, oldExpr);
 	}
 	else 
 	{
