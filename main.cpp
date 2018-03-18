@@ -81,7 +81,6 @@ Express* arLvalHelper(Express* refExpr, std::string arr)
 //NOTE: Does not free its register. Must be manually freed after calling
 std::string outRefReg(Express* expr, bool isFirstCall, std::string reg = "")
 {
-	std::cout << "This is getting called" << std::endl;
 	if(reg == "")
 	{
 		reg = getRegister();
@@ -96,6 +95,8 @@ std::string outRefReg(Express* expr, bool isFirstCall, std::string reg = "")
 		reg = outRefReg(expr->ref_expr, false, reg);
 		out << "addi " << reg <<", " << reg << ", -" << expr->arr_expr->type_ptr->min << std::endl;
 		out << "sll " << reg << ", " << reg << ", 2" << std::endl;
+		std::cout << expr->ref_expr << std::endl;
+		std::cout << expr->ref_expr->arr_expr << std::endl;
 		out << "addi " << reg << ", " << reg << ", " << expr->ref_expr->arr_expr->raw_val << std::endl;
 		out << "add " << reg << ", $gp, " << reg << std::endl;
 		
