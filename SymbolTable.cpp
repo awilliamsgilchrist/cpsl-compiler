@@ -38,7 +38,7 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 			{
 				subExpr->raw_val = 0;
 				subExpr->regist = false;
-				exprMap.top().emplace(key + "[" + std::to_string(i + exprmin->type_ptr->min) + "]", subExpr);
+				exprMap.top().emplace(key + "[" + std::to_string(i + expr->type_ptr->min) + "]", subExpr);
 			}
 			else
 			{
