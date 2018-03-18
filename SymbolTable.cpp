@@ -32,18 +32,18 @@ void SymbolTable::addExpr(std::string key, Express* expr)
 			
 			if(subExpr->type_ptr->usd_type == "array")
 			{
-				this->addExpr(key + "[" + std::to_string(i + expr->min->type_ptr->min) + "]", subExpr);
+				this->addExpr(key + "[" + std::to_string(i + expr->type_ptr->min) + "]", subExpr);
 			}
 			else if(subExpr->type_ptr == m_string_type)
 			{
 				subExpr->raw_val = 0;
 				subExpr->regist = false;
-				exprMap.top().emplace(key + "[" + std::to_string(i + expr->min->type_ptr->min) + "]", subExpr);
+				exprMap.top().emplace(key + "[" + std::to_string(i + exprmin->type_ptr->min) + "]", subExpr);
 			}
 			else
 			{
 				this->offset += 4;
-				exprMap.top().emplace(key + "[" + std::to_string(i + expr->min->type_ptr->min) + "]", subExpr);
+				exprMap.top().emplace(key + "[" + std::to_string(i + expr->type_ptr->min) + "]", subExpr);
 			}
 		}
 	}
