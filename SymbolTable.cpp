@@ -72,7 +72,6 @@ Express* SymbolTable::findExpr(std::string key)
 {
 	std::stack<std::map<std::string, Express*>> checkTable(exprMap);
 	
-	std::cout << key << std::endl;
 	
 	while(checkTable.size() > 0)
 	{
