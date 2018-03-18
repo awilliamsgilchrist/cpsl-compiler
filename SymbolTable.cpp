@@ -21,6 +21,10 @@ void SymbolTable::addType(std::string key, Type* type_ptr)
 //If there are weird, inexplicable things happening, check here first
 void SymbolTable::addExpr(std::string key, Express* expr)
 {
+	std::cout << "Key: " << key << std::endl;
+	std::cout << "USD Type: " << expr->type_ptr->usd_type << std::endl;
+	std::cout << "Ref Expr: " << expr->ref_expr << std::endl;
+	
 	exprMap.top().emplace(key, expr);
 	
 	if(expr->type_ptr->usd_type == "array")
