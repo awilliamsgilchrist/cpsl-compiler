@@ -70,6 +70,7 @@ Express* arLvalHelper(Express* refExpr, std::string arr)
 	Express* nExpr = new Express(refExpr->type_ptr, -10, true);
 	nExpr->arr_expr = symbol_table.findExpr(arr);
 	nExpr->ref_expr = refExpr;
+	std::cout << nExpr->ref_expr << std::endl << refExpr << std::endl;
 	return nExpr;
 }
 
